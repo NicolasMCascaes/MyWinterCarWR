@@ -42,7 +42,12 @@ public class AuthenticateUserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
-        return new CustomUserDetails(user.getId(), user.getEmail(), user.getUsername(),
-                user.getPassword(), user.getRole());
+        return new CustomUserDetails(
+                user.getId(),
+                user.getEmail(),
+                user.getUsername(),
+                user.getPassword(),
+                user.getRole()
+        );
     }
 }

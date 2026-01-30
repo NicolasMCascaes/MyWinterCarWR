@@ -1,9 +1,11 @@
 package com.mwc.wr.user.infrastructure.security;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import com.mwc.wr.user.domain.service.PasswordEncryptor;
 
+@Component
 public class SpringPasswordEncoder implements PasswordEncryptor {
 
     private final PasswordEncoder passwordEncoder;
