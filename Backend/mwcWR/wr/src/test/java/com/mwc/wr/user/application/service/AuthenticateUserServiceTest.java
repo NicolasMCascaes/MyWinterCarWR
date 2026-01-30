@@ -32,6 +32,7 @@ class AuthenticateUserServiceTest {
     @Mock
     private PasswordEncryptor passwordEncoder;
     private AuthenticateUserService authenticateUserService;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -92,11 +93,11 @@ class AuthenticateUserServiceTest {
 
         assertThrows(BadCredentialsException.class, () -> authenticateUserService.execute(dto));
 
-
         verify(userRepository, times(1)).findByEmail(email);
         verify(passwordEncoder, times(1)).matches(senha, senhaCriptografada);
         verify(jwtUtil, Mockito.never()).generateToken(any(UserDetails.class));
     }
+
     @Test
     void execute_shouldntAuthenticatesUser_whenUserNotFound() {
         String email = "teste@email.com";
