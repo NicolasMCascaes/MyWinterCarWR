@@ -33,6 +33,10 @@ public class User {
 
     }
 
+    public User(UUID id) {
+        this.id = id;
+    }
+
     public void changePassword(String newPassword) {
         if (newPassword.isBlank()) {
             throw new IllegalArgumentException("Password cannot be blank");
@@ -59,16 +63,18 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
     public void setId(UUID id) {
         this.id = id;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
+
     public void setUsername(String username) {
         this.username = username;
     }
-
 
     public Roles getRole() {
         return role;
