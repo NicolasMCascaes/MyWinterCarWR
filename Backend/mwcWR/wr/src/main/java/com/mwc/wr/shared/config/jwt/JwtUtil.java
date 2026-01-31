@@ -1,6 +1,7 @@
 package com.mwc.wr.shared.config.jwt;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,13 +13,19 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtil {
     @Value("${jwt.secret}")
-    private static Key SECRET;
+    private String SECRET;
     @Value("${jwt.expiration}")
-    private static Long EXPIRATION_TIME;
+    private Long EXPIRATION_TIME;
+
+    private Key getSigningKey() {
+        byte[] keyBytes = Base64.getDecoder().decode(SECRET);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -30,7 +37,7 @@ public class JwtUtil {
         return doGenerateToken(claims, user.getEmail());
     }
 
-    public static boolean validateToken(String token) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(SECRET).build().parseClaimsJws(token);
             return true;
@@ -39,7 +46,7 @@ public class JwtUtil {
         }
     }
 
-    public static String extractUsername(String token) {
+    public String extractUsername(String token) {
         return Jwts.parser().setSigningKey(SECRET).build().parseClaimsJws(token).getBody().getSubject();
     }
 
@@ -49,7 +56,7 @@ public class JwtUtil {
                 .subject(subject)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SECRET, SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 

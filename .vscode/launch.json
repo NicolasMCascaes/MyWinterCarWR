@@ -2,13 +2,21 @@
     "configurations": [
         {
             "type": "java",
+            "name": "uuidgen",
+            "request": "launch",
+            "mainClass": "uuidgen",
+            "projectName": ""
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-WrApplication<wr>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "mainClass": "com.mwc.wr.WrApplication",
             "projectName": "wr",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=56377 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=wr"
         }
     ]
 }

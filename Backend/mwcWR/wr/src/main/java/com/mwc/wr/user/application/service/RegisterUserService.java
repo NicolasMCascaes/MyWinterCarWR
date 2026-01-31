@@ -25,7 +25,7 @@ public class RegisterUserService {
         if (userRepository.existsByEmail(dto.email()) || userRepository.existsByUsername(dto.username())) {
             throw new UserAlreadyExistsException("USER_ALREADY_EXISTS");
         }
-        User user = new User(null, dto.email(), dto.username(), passwordEncoder.encode(dto.password()), Roles.USER,
+        User user = new User(null, dto.email(), dto.username(), passwordEncoder.encode(dto.password()), dto.roles(),
                 LocalDateTime.now());
         userRepository.save(user);
     }

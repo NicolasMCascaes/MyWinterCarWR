@@ -22,7 +22,9 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
         http.csrf((csrf) -> csrf.disable().authorizeHttpRequests(
                 auth -> auth.requestMatchers("/user/register", "/user/login").permitAll()
-                        .requestMatchers("/attempt/submit").hasRole("USER").anyRequest().authenticated())
+                        .requestMatchers("/attempt/submit").hasRole("USER").requestMatchers("/attempt/moderator/**")
+                        .hasRole("MODERATOR")
+                        .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class));
         return http.build();
     }

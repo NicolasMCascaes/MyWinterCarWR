@@ -19,9 +19,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final AuthenticateUserService authenticateUserService;
+    private final JwtUtil jwtUtil;
 
-    public JwtAuthFilter(AuthenticateUserService authenticateUserService) {
+    public JwtAuthFilter(AuthenticateUserService authenticateUserService, JwtUtil jwtUtil) {
         this.authenticateUserService = authenticateUserService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -39,9 +41,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 return;
             }
             String token = authHeader.substring(7);
-            String email = JwtUtil.extractUsername(token);
+            String email = jwtUtil.extractUsername(token);
             System.out.println("email do usuario: " + email);
-            if (email == null || email.isBlank() || !JwtUtil.validateToken(token)) {
+            if (email == null || email.isBlank() || !jwtUtil.validateToken(token)) {
                 filterChain.doFilter(request, response);
                 return;
             }
