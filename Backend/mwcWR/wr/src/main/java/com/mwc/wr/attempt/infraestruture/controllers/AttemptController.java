@@ -44,34 +44,34 @@ public class AttemptController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/accept/{id}")
+    @PatchMapping("/moderator/accept/{id}")
     public ResponseEntity<Void> acceptAttempt(@PathVariable Long id) {
         rewiewService.acceptAttempt(id);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/reject/{id}")
+    @PatchMapping("/moderator/reject/{id}")
     public ResponseEntity<Void> rejectAttempt(@PathVariable Long id) {
         rewiewService.acceptAttempt(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/listAllAttempt")
+    @GetMapping("/moderator/listAllAttempt")
     public ResponseEntity<List<AttemptResponseDto>> listAllAttempt() {
         return ResponseEntity.ok(listAttemptService.listAllAttempts());
     }
 
-    @GetMapping("/listAllAttemptByCategory")
+    @GetMapping("/moderator/listAllAttemptByCategory")
     public ResponseEntity<List<AttemptResponseDto>> listAllAttemptByCategory(@RequestParam Category category) {
         return ResponseEntity.ok(listAttemptService.listAllAttemptsByCategory(category));
     }
 
-    @GetMapping("/listAllAttemptByStatus")
+    @GetMapping("/moderator/listAllAttemptByStatus")
     public ResponseEntity<List<AttemptResponseDto>> listAllAttemptByStatus(@RequestParam AttemptStatus status) {
         return ResponseEntity.ok(listAttemptService.listAllAttemptsByStatus(status));
     }
 
-    @GetMapping("/listAllAttemptByUserId/{userId}")
+    @GetMapping("/moderator/listAllAttemptByUserId/{userId}")
     public ResponseEntity<List<AttemptResponseDto>> listAllAttemptByStatus(@PathVariable UUID userId) {
         return ResponseEntity.ok(listAttemptService.listUserAttempts(userId));
     }

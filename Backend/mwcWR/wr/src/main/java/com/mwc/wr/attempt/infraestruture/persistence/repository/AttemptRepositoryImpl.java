@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.stereotype.Repository;
+
 import com.mwc.wr.attempt.domain.model.Attempt;
 import com.mwc.wr.attempt.domain.model.AttemptStatus;
 import com.mwc.wr.attempt.domain.model.Category;
 import com.mwc.wr.attempt.domain.repository.AttemptRepository;
 import com.mwc.wr.attempt.infraestruture.mapper.AttemptMapper;
 
+@Repository
 public class AttemptRepositoryImpl implements AttemptRepository {
     private final SpringDataAttemptRepository repository;
     private final AttemptMapper attemptMapper;
@@ -31,12 +34,12 @@ public class AttemptRepositoryImpl implements AttemptRepository {
 
     @Override
     public List<Attempt> findAllByAttemptCategory(Category category) {
-        return repository.findAllByAttemptCategory().stream().map(attemptMapper::toDomain).toList();
+        return repository.findAllByAttemptCategory(category).stream().map(attemptMapper::toDomain).toList();
     }
 
     @Override
     public List<Attempt> findAllByUserId(UUID userId) {
-        return repository.findAllByUserId().stream().map(attemptMapper::toDomain).toList();
+        return repository.findAllByUserId(userId).stream().map(attemptMapper::toDomain).toList();
     }
 
     @Override
@@ -61,7 +64,7 @@ public class AttemptRepositoryImpl implements AttemptRepository {
 
     @Override
     public List<Attempt> findAllByAttemptStatus(AttemptStatus status) {
-        return repository.findAllByAttemptStatus().stream().map(attemptMapper::toDomain).toList();
+        return repository.findAllByAttemptStatus(status).stream().map(attemptMapper::toDomain).toList();
     }
 
 }

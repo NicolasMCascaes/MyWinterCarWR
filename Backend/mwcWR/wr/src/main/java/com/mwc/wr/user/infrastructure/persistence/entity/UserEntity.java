@@ -45,6 +45,10 @@ public class UserEntity {
 
     }
 
+    public UserEntity(UUID id) {
+        this.id = id;
+    }
+
     public UUID getId() {
         return id;
     }

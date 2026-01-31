@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-WrApplication<wr>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.mwc.wr.WrApplication",
+            "projectName": "wr",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

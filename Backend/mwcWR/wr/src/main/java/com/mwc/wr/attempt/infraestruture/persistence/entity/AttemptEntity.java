@@ -4,7 +4,7 @@ import java.time.LocalTime;
 
 import com.mwc.wr.attempt.domain.model.AttemptStatus;
 import com.mwc.wr.attempt.domain.model.Category;
-import com.mwc.wr.user.domain.model.User;
+import com.mwc.wr.user.infrastructure.persistence.entity.UserEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +14,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,9 +24,9 @@ public class AttemptEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAttempt;
-    @Column(name = "user_id", nullable = false)
-    @OneToMany(fetch = FetchType.LAZY)
-    private User userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity userId;
     @Column(name = "video_link", nullable = false)
     private String videoLink;
     @Column(name = "attempt_time", nullable = false)
@@ -41,7 +42,7 @@ public class AttemptEntity {
     @Column(name = "is_record")
     private Boolean isRecord;
 
-    public AttemptEntity(Long idAttempt, User userId, String videoLink, LocalTime attemptTime,
+    public AttemptEntity(Long idAttempt, UserEntity userId, String videoLink, LocalTime attemptTime,
             String attemptDescription, Category attemptCategory, AttemptStatus attemptStatus, Boolean isRecord) {
         this.idAttempt = idAttempt;
         this.userId = userId;
@@ -61,11 +62,11 @@ public class AttemptEntity {
         this.idAttempt = idAttempt;
     }
 
-    public User getUserId() {
+    public UserEntity getUserId() {
         return userId;
     }
 
-    public void setUserId(User userId) {
+    public void setUserId(UserEntity userId) {
         this.userId = userId;
     }
 
