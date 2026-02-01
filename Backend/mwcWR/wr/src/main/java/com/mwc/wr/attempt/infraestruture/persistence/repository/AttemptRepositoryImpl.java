@@ -39,7 +39,7 @@ public class AttemptRepositoryImpl implements AttemptRepository {
 
     @Override
     public List<Attempt> findAllByUserId(UUID userId) {
-        return repository.findAllByUserId(userId).stream().map(attemptMapper::toDomain).toList();
+        return repository.findAllByUserId_Id(userId).stream().map(attemptMapper::toDomain).toList();
     }
 
     @Override

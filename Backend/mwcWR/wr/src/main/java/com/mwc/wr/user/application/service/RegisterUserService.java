@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.mwc.wr.shared.exception.UserAlreadyExistsException;
 import com.mwc.wr.user.application.dto.UserRequestDto;
-import com.mwc.wr.user.domain.model.Roles;
 import com.mwc.wr.user.domain.model.User;
 import com.mwc.wr.user.domain.repository.UserRepository;
 import com.mwc.wr.user.domain.service.PasswordEncryptor;

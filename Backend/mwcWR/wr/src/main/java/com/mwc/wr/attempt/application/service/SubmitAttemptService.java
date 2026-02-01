@@ -21,7 +21,7 @@ public class SubmitAttemptService {
     public void submitAttempt(AttemptRequestDto dto) {
         userRepository.findById(dto.userId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + dto.userId()));
-        Attempt attempt = new Attempt(null, dto.userId(), dto.videoLink(), dto.attemptTime(), dto.attempt_description(),
+        Attempt attempt = new Attempt(null, dto.userId(), dto.videoLink(), dto.attemptTime(), dto.attemptDescription(),
                 dto.attemptCategory(), dto.attemptStatus(), false);
         attemptRepository.save(attempt);
     }

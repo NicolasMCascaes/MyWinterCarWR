@@ -23,27 +23,30 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ErrorInfo handleAllExceptions(Exception ex) {
-        return new ErrorInfo(
+    public ResponseEntity<ErrorInfo> handleAllExceptions(Exception ex) {
+        ErrorInfo error = new ErrorInfo(
                 "Internal Server Error",
                 500,
                 LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ErrorInfo handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return new ErrorInfo(
+    public ResponseEntity<ErrorInfo> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        ErrorInfo error = new ErrorInfo(
                 env.getProperty(ex.getMessage()),
                 404,
                 LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    public ErrorInfo handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
-        return new ErrorInfo(
+    public ResponseEntity<ErrorInfo> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+        ErrorInfo error = new ErrorInfo(
                 env.getProperty(ex.getMessage()),
                 409,
                 LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler({ MethodArgumentNotValidException.class, ConstraintViolationException.class })

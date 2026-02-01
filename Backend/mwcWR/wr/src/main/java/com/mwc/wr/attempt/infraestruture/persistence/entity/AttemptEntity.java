@@ -54,6 +54,10 @@ public class AttemptEntity {
         this.isRecord = isRecord;
     }
 
+    public AttemptEntity() {
+
+    }
+
     public Long getIdAttempt() {
         return idAttempt;
     }

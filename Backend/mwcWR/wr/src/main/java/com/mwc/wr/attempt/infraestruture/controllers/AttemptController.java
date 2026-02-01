@@ -52,7 +52,7 @@ public class AttemptController {
 
     @PatchMapping("/moderator/reject/{id}")
     public ResponseEntity<Void> rejectAttempt(@PathVariable Long id) {
-        rewiewService.acceptAttempt(id);
+        rewiewService.rejectAttempt(id);
         return ResponseEntity.ok().build();
     }
 
@@ -71,8 +71,8 @@ public class AttemptController {
         return ResponseEntity.ok(listAttemptService.listAllAttemptsByStatus(status));
     }
 
-    @GetMapping("/moderator/listAllAttemptByUserId/{userId}")
-    public ResponseEntity<List<AttemptResponseDto>> listAllAttemptByStatus(@PathVariable UUID userId) {
+    @GetMapping("/moderator/listAllAttemptByUserId")
+    public ResponseEntity<List<AttemptResponseDto>> listAllAttemptByStatus(@RequestParam UUID userId) {
         return ResponseEntity.ok(listAttemptService.listUserAttempts(userId));
     }
 
