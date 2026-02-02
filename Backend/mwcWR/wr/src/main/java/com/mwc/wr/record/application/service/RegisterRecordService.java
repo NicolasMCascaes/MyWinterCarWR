@@ -39,7 +39,6 @@ public class RegisterRecordService {
                                 attempt.getAttemptCategory());
                 Optional<Record> recordPosition3 = recordRepository.findByPositionAndAttempt_Category(Position.THIRD,
                                 attempt.getAttemptCategory());
-
                 if (recordPosition1.isPresent()) {
                         Attempt attemptRank1 = attemptRepository.findById(recordPosition1.get().getAttemptId())
                                         .orElse(null);
@@ -48,20 +47,17 @@ public class RegisterRecordService {
 
                                 handleBetterThanRank1(attempt, idAttempt, recordPosition1, recordPosition2,
                                                 recordPosition3);
-                        } else if (recordPosition2.isPresent() &&
-                                        attempt.getAttemptTime().isBefore(
-                                                        attemptRepository.findById(recordPosition2.get().getAttemptId())
-                                                                        .get().getAttemptTime())) {
-
+                        } else if (!recordPosition2.isPresent()) {
+                                createRecordAtPosition(attempt, idAttempt, Position.SECOND);
+                        } else if (attempt.getAttemptTime().isBefore(
+                                        attemptRepository.findById(recordPosition2.get().getAttemptId())
+                                                        .get().getAttemptTime())) {
                                 handleBetterThanRank2(attempt, idAttempt, recordPosition2, recordPosition3);
-                        } else if (recordPosition3.isEmpty() ||
-                                        (recordPosition3.isPresent() &&
-                                                        attempt.getAttemptTime().isBefore(
-                                                                        attemptRepository
-                                                                                        .findById(recordPosition3.get()
-                                                                                                        .getAttemptId())
-                                                                                        .get().getAttemptTime()))) {
-
+                        } else if (recordPosition3.isEmpty()) {
+                                createRecordAtPosition(attempt, idAttempt, Position.THIRD);
+                        } else if (attempt.getAttemptTime().isBefore(
+                                        attemptRepository.findById(recordPosition3.get().getAttemptId())
+                                                        .get().getAttemptTime())) {
                                 handleBetterThanRank3(attempt, idAttempt, recordPosition3);
                         }
                 } else {
@@ -111,8 +107,10 @@ public class RegisterRecordService {
                         recordRepository.inactivateRecord(pos3.get().getIdRecord());
                 }
 
-                pos2.get().setPosition(Position.THIRD);
-                recordRepository.save(pos2.get());
+                if (pos2.isPresent()) {
+                        pos2.get().setPosition(Position.THIRD);
+                        recordRepository.save(pos2.get());
+                }
 
                 Record newRecord = new Record(null, attempt.getUserId(), idAttempt, Position.SECOND,
                                 true, LocalDateTime.now());
@@ -128,6 +126,14 @@ public class RegisterRecordService {
                 }
 
                 Record newRecord = new Record(null, attempt.getUserId(), idAttempt, Position.THIRD,
+                                true, LocalDateTime.now());
+                recordRepository.save(newRecord);
+                attempt.setIs_record(true);
+                attemptRepository.save(attempt);
+        }
+
+        private void createRecordAtPosition(Attempt attempt, Long idAttempt, Position position) {
+                Record newRecord = new Record(null, attempt.getUserId(), idAttempt, position,
                                 true, LocalDateTime.now());
                 recordRepository.save(newRecord);
                 attempt.setIs_record(true);

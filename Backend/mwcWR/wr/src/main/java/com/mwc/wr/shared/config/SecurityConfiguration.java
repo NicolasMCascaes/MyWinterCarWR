@@ -23,7 +23,7 @@ public class SecurityConfiguration {
         http.csrf((csrf) -> csrf.disable().authorizeHttpRequests(
                 auth -> auth.requestMatchers("/user/register", "/user/login").permitAll()
                         .requestMatchers("/attempt/submit").hasRole("USER").requestMatchers("/attempt/moderator/**")
-                        .hasRole("MODERATOR")
+                        .hasRole("MODERATOR").requestMatchers("/records/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class));
         return http.build();

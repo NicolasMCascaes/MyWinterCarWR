@@ -30,40 +30,40 @@ public interface SpringDataRecordRepository extends JpaRepository<RecordEntity, 
 
         List<RecordEntity> findAllByUserIdAndIsActiveTrue(UUID userId);
 
+        @Query("""
+                            SELECT
+                                r.idRecord AS idRecord,
+                                u.username AS username,
+                                a.attemptCategory AS attemptCategory,
+                                a.attemptTime AS attemptTime,
+                                a.videoLink AS videoLink,
+                                a.attemptDescription AS attemptDescription,
+                                r.position AS position,
+                                r.isActive AS isActive,
+                                r.createdAt AS createdAt
+                            FROM RecordEntity r
+                            JOIN r.attempt a
+                            JOIN a.user u
+                            WHERE r.isActive = true AND a.attemptCategory = ?1
+                            ORDER BY a.attemptTime ASC
+                        """)
         List<RecordDetails> findAllByAttempt_AttemptCategoryAndIsActiveTrueOrderByAttempt_AttemptTimeDesc(
                         Category category);
 
-        @Query("""
-                        SELECT
-                            r.idRecord,
-                            u.username,
-                            a.attemptCategory,
-                            a.attemptTime,
-                            a.videoLink,
-                            a.attemptDescription,
-                            r.position,
-                            r.isActive,
-                            r.createdAt
-
-                        FROM RecordEntity r
-                        JOIN r.attempt a
-                        JOIN a.user u
-                        WHERE r.position = ?1 AND r.isActive = true AND a.attemptCategory = ?2
-                        """)
-        Optional<RecordEntity> findByPositionAndAttempt_AttemptCategoryWhereIsActiveTrue(Position position,
+        Optional<RecordEntity> findByPositionAndAttempt_AttemptCategoryAndIsActiveTrue(Position position,
                         Category category);
 
         @Query("""
                         SELECT
-                            r.idRecord,
-                            u.username,
-                            a.attemptCategory,
-                            a.attemptTime,
-                            a.videoLink,
-                            a.attemptDescription,
-                            r.position,
-                            r.isActive,
-                            r.createdAt
+                                r.idRecord AS idRecord,
+                                u.username AS username,
+                                a.attemptCategory AS attemptCategory,
+                                a.attemptTime AS attemptTime,
+                                a.videoLink AS videoLink,
+                                a.attemptDescription AS attemptDescription,
+                                r.position AS position,
+                                r.isActive AS isActive,
+                                r.createdAt AS createdAt
 
                         FROM RecordEntity r
                         JOIN r.attempt a
@@ -74,35 +74,34 @@ public interface SpringDataRecordRepository extends JpaRepository<RecordEntity, 
 
         @Query("""
                         SELECT
-                            r.idRecord,
-                            u.username,
-                            a.attemptCategory,
-                            a.attemptTime,
-                            a.videoLink,
-                            a.attemptDescription,
-                            r.position,
-                            r.isActive,
-                            r.createdAt
+                                 r.idRecord AS idRecord,
+                                 u.username AS username,
+                                 a.attemptCategory AS attemptCategory,
+                                 a.attemptTime AS attemptTime,
+                                 a.videoLink AS videoLink,
+                                 a.attemptDescription AS attemptDescription,
+                                 r.position AS position,
+                                 r.isActive AS isActive,
+                                 r.createdAt AS createdAt
 
-                        FROM RecordEntity r
-                        JOIN r.attempt a
-                        JOIN a.user u
-                        WHERE r.user.id = ?1 AND r.isActive = true
-                        """)
+                         FROM RecordEntity r
+                         JOIN r.attempt a
+                         JOIN a.user u
+                         WHERE r.user.id = ?1 AND r.isActive = true
+                         """)
         List<RecordDetails> findActiveRecordsByUser(UUID userId);
 
         @Query("""
                         SELECT
-                            r.idRecord,
-                            u.username,
-                            a.attemptCategory,
-                            a.attemptTime,
-                            a.videoLink,
-                            a.attemptDescription,
-                            r.position,
-                            r.isActive,
-                            r.createdAt
-
+                                r.idRecord AS idRecord,
+                                u.username AS username,
+                                a.attemptCategory AS attemptCategory,
+                                a.attemptTime AS attemptTime,
+                                a.videoLink AS videoLink,
+                                a.attemptDescription AS attemptDescription,
+                                r.position AS position,
+                                r.isActive AS isActive,
+                                r.createdAt AS createdAt
                         FROM RecordEntity r
                         JOIN r.attempt a
                         JOIN a.user u

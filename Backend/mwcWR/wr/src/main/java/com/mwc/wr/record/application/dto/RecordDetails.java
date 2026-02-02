@@ -7,23 +7,22 @@ import com.mwc.wr.attempt.domain.model.Category;
 import com.mwc.wr.record.domain.model.Position;
 
 public interface RecordDetails {
-    public interface RecordDetailsProjection {
-        Long getIdRecord();
 
-        String getUsername();
+    Long getIdRecord();
 
-        Category getAttemptCategory();
+    String getUsername();
 
-        LocalTime getAttemptTime();
+    Category getAttemptCategory();
 
-        String getVideoLink();
+    LocalTime getAttemptTime();
 
-        String getAttemptDescription();
+    String getVideoLink();
 
-        Position getPosition();
+    String getAttemptDescription();
 
-        boolean getIsActive();
+    Position getPosition();
 
-        LocalDateTime getCreatedAt();
-    }
+    Boolean getIsActive();
+
+    LocalDateTime getCreatedAt();
 }

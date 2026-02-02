@@ -65,7 +65,7 @@ public class RecordRepositoryImpl implements RecordRepository {
 
     @Override
     public Optional<Record> findByPositionAndAttempt_Category(Position position, Category category) {
-        return springDataRecordRepository.findByPositionAndAttempt_AttemptCategoryWhereIsActiveTrue(position, category)
+        return springDataRecordRepository.findByPositionAndAttempt_AttemptCategoryAndIsActiveTrue(position, category)
                 .map(recordMapper::toDomain);
     }
 
