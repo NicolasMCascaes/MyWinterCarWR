@@ -16,7 +16,7 @@ public class AttemptMapper {
     }
 
     public Attempt toDomain(AttemptEntity entity) {
-        return new Attempt(entity.getIdAttempt(), entity.getUserId().getId(), entity.getVideoLink(),
+        return new Attempt(entity.getIdAttempt(), entity.getUser().getId(), entity.getVideoLink(),
                 entity.getAttemptTime(),
                 entity.getAttemptDescription(), entity.getAttemptCategory(), entity.getAttemptStatus(),
                 entity.getIsRecord());

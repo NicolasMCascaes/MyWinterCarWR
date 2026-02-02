@@ -30,4 +30,5 @@ public interface SpringDataAttemptRepository extends JpaRepository<AttemptEntity
     @Modifying
     @Transactional
     void rejectAttemptById(Long id);
+
 }

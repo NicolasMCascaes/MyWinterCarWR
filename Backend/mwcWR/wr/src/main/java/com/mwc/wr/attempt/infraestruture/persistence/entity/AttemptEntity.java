@@ -26,7 +26,7 @@ public class AttemptEntity {
     private Long idAttempt;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity userId;
+    private UserEntity user;
     @Column(name = "video_link", nullable = false)
     private String videoLink;
     @Column(name = "attempt_time", nullable = false)
@@ -45,7 +45,7 @@ public class AttemptEntity {
     public AttemptEntity(Long idAttempt, UserEntity userId, String videoLink, LocalTime attemptTime,
             String attemptDescription, Category attemptCategory, AttemptStatus attemptStatus, Boolean isRecord) {
         this.idAttempt = idAttempt;
-        this.userId = userId;
+        this.user = userId;
         this.videoLink = videoLink;
         this.attemptTime = attemptTime;
         this.attemptDescription = attemptDescription;
@@ -58,6 +58,10 @@ public class AttemptEntity {
 
     }
 
+    public AttemptEntity(Long idAttempt) {
+        this.idAttempt = idAttempt;
+    }
+
     public Long getIdAttempt() {
         return idAttempt;
     }
@@ -66,12 +70,12 @@ public class AttemptEntity {
         this.idAttempt = idAttempt;
     }
 
-    public UserEntity getUserId() {
-        return userId;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setUserId(UserEntity userId) {
-        this.userId = userId;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public String getVideoLink() {
