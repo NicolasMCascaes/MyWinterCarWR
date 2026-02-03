@@ -28,4 +28,10 @@ public class RecordController {
         return ResponseEntity.ok(listRecordsService.listTopRecordsByCategory(category));
     }
 
+    @GetMapping("/podium-and-attempts")
+    public ResponseEntity<List<Object>> listPodiumAndOtherAttempts(
+            @RequestParam Category category) {
+        return ResponseEntity.ok(listRecordsService.listPodiumAndOtherAttempts(category));
+    }
+
 }

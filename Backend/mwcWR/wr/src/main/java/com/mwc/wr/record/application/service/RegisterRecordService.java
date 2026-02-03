@@ -75,6 +75,10 @@ public class RegisterRecordService {
                 Optional<Record> userRecord = recordRepository.findByUserIdAndAttempt_Category(userId, category);
                 if (userRecord.isPresent()) {
                         recordRepository.inactivateRecord(userRecord.get().getIdRecord());
+                        attemptRepository.findById(userRecord.get().getAttemptId()).ifPresent(attempt -> {
+                                attempt.setIs_record(false);
+                                attemptRepository.save(attempt);
+                        });
                 }
         }
 
@@ -83,6 +87,10 @@ public class RegisterRecordService {
 
                 if (pos3.isPresent()) {
                         recordRepository.inactivateRecord(pos3.get().getIdRecord());
+                        attemptRepository.findById(pos3.get().getAttemptId()).ifPresent(attemptPos3 -> {
+                                attemptPos3.setIs_record(false);
+                                attemptRepository.save(attemptPos3);
+                        });
                 }
 
                 if (pos2.isPresent()) {
@@ -105,6 +113,10 @@ public class RegisterRecordService {
 
                 if (pos3.isPresent()) {
                         recordRepository.inactivateRecord(pos3.get().getIdRecord());
+                        attemptRepository.findById(pos3.get().getAttemptId()).ifPresent(attemptPos3 -> {
+                                attemptPos3.setIs_record(false);
+                                attemptRepository.save(attemptPos3);
+                        });
                 }
 
                 if (pos2.isPresent()) {
@@ -123,6 +135,10 @@ public class RegisterRecordService {
 
                 if (pos3.isPresent()) {
                         recordRepository.inactivateRecord(pos3.get().getIdRecord());
+                        attemptRepository.findById(pos3.get().getAttemptId()).ifPresent(attemptPos3 -> {
+                                attemptPos3.setIs_record(false);
+                                attemptRepository.save(attemptPos3);
+                        });
                 }
 
                 Record newRecord = new Record(null, attempt.getUserId(), idAttempt, Position.THIRD,

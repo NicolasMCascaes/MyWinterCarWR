@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
+import com.mwc.wr.attempt.application.dto.AttemptDetails;
 import com.mwc.wr.attempt.domain.model.Attempt;
 import com.mwc.wr.attempt.domain.model.AttemptStatus;
 import com.mwc.wr.attempt.domain.model.Category;
@@ -67,4 +68,14 @@ public class AttemptRepositoryImpl implements AttemptRepository {
         return repository.findAllByAttemptStatus(status).stream().map(attemptMapper::toDomain).toList();
     }
 
+    @Override
+    public List<AttemptDetails> findAllByIsRecordFalseAndAttemptCategoryAndAttemptStatus(Category category,
+            AttemptStatus status) {
+        return repository.findAllByIsRecordFalseAndAttemptCategoryAndAttemptStatus(category, status);
+    }
+
+    @Override
+    public boolean existsByUserIdAndAttemptStatus(UUID userId, AttemptStatus status) {
+        return repository.existsByUser_IdAndAttemptStatus(userId, status);
+    }
 }

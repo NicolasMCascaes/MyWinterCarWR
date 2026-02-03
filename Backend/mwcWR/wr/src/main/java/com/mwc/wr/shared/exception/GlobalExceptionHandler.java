@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorInfo> handleResourceNotFoundException(ResourceNotFoundException ex) {
         ErrorInfo error = new ErrorInfo(
-                env.getProperty(ex.getMessage()),
+                resolveMessage(ex.getMessage()),
                 404,
                 LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
@@ -43,7 +43,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ErrorInfo> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
         ErrorInfo error = new ErrorInfo(
-                env.getProperty(ex.getMessage()),
+                resolveMessage(ex.getMessage()),
+                409,
+                LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(AttemptAlreadyPendingException.class)
+    public ResponseEntity<ErrorInfo> handleAttemptAlreadyPendingException(AttemptAlreadyPendingException ex) {
+        ErrorInfo error = new ErrorInfo(
+                resolveMessage(ex.getMessage()),
                 409,
                 LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
@@ -62,5 +71,10 @@ public class GlobalExceptionHandler {
         }
         ErrorInfo error = new ErrorInfo(errorMsg, HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    private String resolveMessage(String messageKey) {
+        String resolved = env.getProperty(messageKey);
+        return resolved != null ? resolved : messageKey;
     }
 }

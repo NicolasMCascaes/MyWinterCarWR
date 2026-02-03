@@ -3,6 +3,7 @@ package com.mwc.wr.attempt.infraestruture.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mwc.wr.attempt.application.dto.AttemptDetails;
 import com.mwc.wr.attempt.application.dto.AttemptRequestDto;
 import com.mwc.wr.attempt.application.dto.AttemptResponseDto;
 import com.mwc.wr.attempt.application.service.ListUserAttemptsService;
@@ -10,6 +11,7 @@ import com.mwc.wr.attempt.application.service.RewiewAttemptService;
 import com.mwc.wr.attempt.application.service.SubmitAttemptService;
 import com.mwc.wr.attempt.domain.model.AttemptStatus;
 import com.mwc.wr.attempt.domain.model.Category;
+import com.mwc.wr.attempt.domain.repository.AttemptRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,12 +32,14 @@ public class AttemptController {
     private final SubmitAttemptService submitService;
     private final RewiewAttemptService rewiewService;
     private final ListUserAttemptsService listAttemptService;
+    private final AttemptRepository attemptRepository;
 
     public AttemptController(SubmitAttemptService submitService, RewiewAttemptService rewiewService,
-            ListUserAttemptsService listAttemptService) {
+            ListUserAttemptsService listAttemptService, AttemptRepository attemptRepository) {
         this.submitService = submitService;
         this.rewiewService = rewiewService;
         this.listAttemptService = listAttemptService;
+        this.attemptRepository = attemptRepository;
     }
 
     @PostMapping("/submit")
@@ -74,6 +78,12 @@ public class AttemptController {
     @GetMapping("/moderator/listAllAttemptByUserId")
     public ResponseEntity<List<AttemptResponseDto>> listAllAttemptByStatus(@RequestParam UUID userId) {
         return ResponseEntity.ok(listAttemptService.listUserAttempts(userId));
+    }
+
+    @GetMapping("/moderator/listAttemptCor")
+    public ResponseEntity<List<AttemptDetails>> listAllAttemptByCatego(@RequestParam Category category) {
+        return ResponseEntity.ok(attemptRepository.findAllByIsRecordFalseAndAttemptCategoryAndAttemptStatus(category,
+                AttemptStatus.APPROVED));
     }
 
 }

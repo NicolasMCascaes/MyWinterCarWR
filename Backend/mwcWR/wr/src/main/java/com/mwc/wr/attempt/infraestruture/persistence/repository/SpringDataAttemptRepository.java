@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mwc.wr.attempt.application.dto.AttemptDetails;
 import com.mwc.wr.attempt.domain.model.AttemptStatus;
 import com.mwc.wr.attempt.domain.model.Category;
 import com.mwc.wr.attempt.infraestruture.persistence.entity.AttemptEntity;
@@ -20,6 +21,12 @@ public interface SpringDataAttemptRepository extends JpaRepository<AttemptEntity
     List<AttemptEntity> findAllByUserId_Id(UUID id);
 
     List<AttemptEntity> findAllByAttemptStatus(AttemptStatus status);
+
+    boolean existsByUser_IdAndAttemptStatus(UUID userId, AttemptStatus status);
+
+    @Query("SELECT a.idAttempt as idAttempt, a.attemptTime as attemptTime, a.videoLink as videoLink, a.attemptCategory as attemptCategory, a.attemptDescription as attemptDescription, a.isRecord as isRecord, a.user.id as userId, u.username as username FROM AttemptEntity a JOIN a.user u WHERE a.isRecord = false AND a.attemptCategory = ?1 AND a.attemptStatus = ?2 ORDER BY a.attemptTime ASC")
+    List<AttemptDetails> findAllByIsRecordFalseAndAttemptCategoryAndAttemptStatus(Category category,
+            AttemptStatus status);
 
     @Query("UPDATE AttemptEntity SET attemptStatus = APPROVED WHERE idAttempt = ?1")
     @Modifying

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.mwc.wr.attempt.application.dto.AttemptDetails;
 import com.mwc.wr.attempt.domain.model.Attempt;
 import com.mwc.wr.attempt.domain.model.AttemptStatus;
 import com.mwc.wr.attempt.domain.model.Category;
@@ -26,5 +27,10 @@ public interface AttemptRepository {
     List<Attempt> findAll();
 
     List<Attempt> findAllByAttemptStatus(AttemptStatus status);
+
+    List<AttemptDetails> findAllByIsRecordFalseAndAttemptCategoryAndAttemptStatus(Category category,
+            AttemptStatus status);
+
+    boolean existsByUserIdAndAttemptStatus(UUID userId, AttemptStatus status);
 
 }

@@ -40,7 +40,8 @@ public interface SpringDataRecordRepository extends JpaRepository<RecordEntity, 
                                 a.attemptDescription AS attemptDescription,
                                 r.position AS position,
                                 r.isActive AS isActive,
-                                r.createdAt AS createdAt
+                                r.createdAt AS createdAt,
+                                r.user.id AS userId
                             FROM RecordEntity r
                             JOIN r.attempt a
                             JOIN a.user u
