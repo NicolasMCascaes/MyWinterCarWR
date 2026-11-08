@@ -1,5 +1,6 @@
 package com.mwc.wr.attempt.domain.model;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -14,9 +15,13 @@ public class Attempt {
     private Category attemptCategory;
     private AttemptStatus attemptStatus;
     private Boolean isRecord;
+    private LocalDateTime submittedAt;
+    private UUID reviewedBy;
+    private LocalDateTime reviewedAt;
 
     public Attempt(Long idAttempt, UUID userId, String videoLink, LocalTime attemptTime, String attemptDescription,
-            Category attemptCategory, AttemptStatus attemptStatus, Boolean isRecord) {
+            Category attemptCategory, AttemptStatus attemptStatus, Boolean isRecord,
+            LocalDateTime submittedAt) {
         if (userId == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
@@ -37,19 +42,28 @@ public class Attempt {
         this.attemptCategory = attemptCategory;
         this.attemptStatus = attemptStatus;
         this.isRecord = isRecord;
+        this.submittedAt = submittedAt;
     }
 
     public Attempt() {
     }
 
-    public void approve() {
-        ensurePending();
-        this.attemptStatus = AttemptStatus.APPROVED;
+    public void approve(UUID moderatorId) {
+        review(moderatorId, AttemptStatus.APPROVED);
     }
 
-    public void reject() {
+    public void reject(UUID moderatorId) {
+        review(moderatorId, AttemptStatus.REJECTED);
+    }
+
+    private void review(UUID moderatorId, AttemptStatus result) {
+        if (moderatorId == null) {
+            throw new IllegalArgumentException("Moderator ID cannot be null");
+        }
         ensurePending();
-        this.attemptStatus = AttemptStatus.REJECTED;
+        this.attemptStatus = result;
+        this.reviewedBy = moderatorId;
+        this.reviewedAt = LocalDateTime.now();
     }
 
     private void ensurePending() {
@@ -120,5 +134,29 @@ public class Attempt {
 
     public void setIsRecord(Boolean isRecord) {
         this.isRecord = isRecord;
+    }
+
+    public LocalDateTime getSubmittedAt() {
+        return submittedAt;
+    }
+
+    public void setSubmittedAt(LocalDateTime submittedAt) {
+        this.submittedAt = submittedAt;
+    }
+
+    public UUID getReviewedBy() {
+        return reviewedBy;
+    }
+
+    public void setReviewedBy(UUID reviewedBy) {
+        this.reviewedBy = reviewedBy;
+    }
+
+    public LocalDateTime getReviewedAt() {
+        return reviewedAt;
+    }
+
+    public void setReviewedAt(LocalDateTime reviewedAt) {
+        this.reviewedAt = reviewedAt;
     }
 }

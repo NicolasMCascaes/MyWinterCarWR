@@ -31,14 +31,18 @@ public class UserEntity {
     private Roles role;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+    @Column(length = 2)
+    private String country;
 
-    public UserEntity(UUID id, String email, String username, String password, Roles role, LocalDateTime createdAt) {
+    public UserEntity(UUID id, String email, String username, String password, Roles role, LocalDateTime createdAt,
+            String country) {
         this.id = id;
         this.email = email;
         this.role = role;
         this.username = username;
         this.password = password;
         this.createdAt = createdAt;
+        this.country = country;
     }
 
     public UserEntity() {
@@ -97,4 +101,12 @@ public class UserEntity {
         this.createdAt = createdAt;
     }
 
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 }

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.mwc.wr.attempt.application.dto.AttemptDetails;
+import com.mwc.wr.attempt.application.dto.CategoryStatusCount;
 import com.mwc.wr.attempt.domain.model.Attempt;
 import com.mwc.wr.attempt.domain.model.AttemptStatus;
 import com.mwc.wr.attempt.domain.model.Category;
@@ -137,7 +139,7 @@ class RegisterRecordServiceTest {
 
         Attempt add(UUID user, LocalTime time) {
             Attempt a = new Attempt(nextId++, user, "link", time, "desc", Category.RALLY, AttemptStatus.APPROVED,
-                    false);
+                    false, null);
             store.put(a.getIdAttempt(), a);
             return a;
         }
@@ -192,6 +194,41 @@ class RegisterRecordServiceTest {
 
         @Override
         public List<AttemptDetails> findApprovedNonRecordDetails(Category category) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<AttemptDetails> findApprovedDetailsOrderByTime(Category category) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<AttemptDetails> findDetailsByStatus(AttemptStatus status) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Optional<AttemptDetails> findDetailsById(Long id) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<AttemptDetails> findReviewedDetails() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<AttemptDetails> findReviewedDetailsByStatus(AttemptStatus status) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<LocalDateTime> findSubmissionDatesSince(LocalDateTime since) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<CategoryStatusCount> countByCategoryAndStatus() {
             throw new UnsupportedOperationException();
         }
 

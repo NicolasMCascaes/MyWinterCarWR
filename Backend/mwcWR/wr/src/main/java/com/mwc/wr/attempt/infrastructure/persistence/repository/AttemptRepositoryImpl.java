@@ -1,5 +1,6 @@
 package com.mwc.wr.attempt.infrastructure.persistence.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -7,6 +8,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
 import com.mwc.wr.attempt.application.dto.AttemptDetails;
+import com.mwc.wr.attempt.application.dto.CategoryStatusCount;
 import com.mwc.wr.attempt.domain.model.Attempt;
 import com.mwc.wr.attempt.domain.model.AttemptStatus;
 import com.mwc.wr.attempt.domain.model.Category;
@@ -73,6 +75,41 @@ public class AttemptRepositoryImpl implements AttemptRepository {
     @Override
     public List<AttemptDetails> findApprovedNonRecordDetails(Category category) {
         return repository.findApprovedNonRecordDetails(category, AttemptStatus.APPROVED);
+    }
+
+    @Override
+    public List<AttemptDetails> findApprovedDetailsOrderByTime(Category category) {
+        return repository.findDetailsByCategoryAndStatusOrderByTime(category, AttemptStatus.APPROVED);
+    }
+
+    @Override
+    public List<AttemptDetails> findDetailsByStatus(AttemptStatus status) {
+        return repository.findDetailsByStatus(status);
+    }
+
+    @Override
+    public Optional<AttemptDetails> findDetailsById(Long id) {
+        return repository.findDetailsById(id);
+    }
+
+    @Override
+    public List<AttemptDetails> findReviewedDetails() {
+        return repository.findReviewedDetails();
+    }
+
+    @Override
+    public List<AttemptDetails> findReviewedDetailsByStatus(AttemptStatus status) {
+        return repository.findReviewedDetailsByStatus(status);
+    }
+
+    @Override
+    public List<LocalDateTime> findSubmissionDatesSince(LocalDateTime since) {
+        return repository.findSubmissionDatesSince(since);
+    }
+
+    @Override
+    public List<CategoryStatusCount> countByCategoryAndStatus() {
+        return repository.countByCategoryAndStatus();
     }
 
     @Override

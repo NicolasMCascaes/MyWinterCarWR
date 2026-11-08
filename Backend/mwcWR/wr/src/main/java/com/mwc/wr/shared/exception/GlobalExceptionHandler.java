@@ -3,6 +3,7 @@ package com.mwc.wr.shared.exception;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,10 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -67,6 +71,16 @@ public class GlobalExceptionHandler {
         return build(resolveMessage(ex.getMessage()), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(InvalidCountryException.class)
+    public ResponseEntity<ErrorInfo> handleInvalidCountryException(InvalidCountryException ex) {
+        return build(resolveMessage(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidVideoLinkException.class)
+    public ResponseEntity<ErrorInfo> handleInvalidVideoLinkException(InvalidVideoLinkException ex) {
+        return build(resolveMessage(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorInfo> handleBadCredentialsException(BadCredentialsException ex) {
         return build(resolveMessage(ex.getMessage()), HttpStatus.UNAUTHORIZED);
@@ -75,6 +89,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorInfo> handleAccessDeniedException(AccessDeniedException ex) {
         return build("Access denied", HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ErrorInfo> handleHandlerMethodValidation(HandlerMethodValidationException ex) {
+        String errorMsg = ex.getAllErrors().stream().map(MessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(","));
+        return build(errorMsg, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorInfo> handleNoResourceFound(NoResourceFoundException ex) {
+        return build("Resource not found", HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorInfo> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        return build("HTTP method not supported", HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler({ HttpMessageNotReadableException.class, MethodArgumentTypeMismatchException.class })

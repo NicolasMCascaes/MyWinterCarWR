@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mwc.wr.attempt.domain.model.Category;
+import com.mwc.wr.record.application.dto.LeaderboardEntryDto;
 import com.mwc.wr.record.application.dto.RecordDetails;
 import com.mwc.wr.record.application.service.ListRecordsService;
 
@@ -28,10 +29,9 @@ public class RecordController {
         return ResponseEntity.ok(listRecordsService.listTopRecordsByCategory(category));
     }
 
-    @GetMapping("/podium-and-attempts")
-    public ResponseEntity<List<Object>> listPodiumAndOtherAttempts(
-            @RequestParam Category category) {
-        return ResponseEntity.ok(listRecordsService.listPodiumAndOtherAttempts(category));
+    @GetMapping("/leaderboard")
+    public ResponseEntity<List<LeaderboardEntryDto>> listLeaderboard(@RequestParam Category category) {
+        return ResponseEntity.ok(listRecordsService.listLeaderboard(category));
     }
 
 }

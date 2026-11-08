@@ -1,5 +1,6 @@
 package com.mwc.wr.attempt.application.service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -8,7 +9,9 @@ import com.mwc.wr.attempt.application.dto.AttemptRequestDto;
 import com.mwc.wr.attempt.domain.model.Attempt;
 import com.mwc.wr.attempt.domain.model.AttemptStatus;
 import com.mwc.wr.attempt.domain.repository.AttemptRepository;
+import com.mwc.wr.attempt.domain.service.VideoLinkPolicy;
 import com.mwc.wr.shared.exception.AttemptAlreadyPendingException;
+import com.mwc.wr.shared.exception.InvalidVideoLinkException;
 import com.mwc.wr.shared.exception.ResourceNotFoundException;
 import com.mwc.wr.user.domain.repository.UserRepository;
 
@@ -23,6 +26,10 @@ public class SubmitAttemptService {
     }
 
     public void submitAttempt(UUID userId, AttemptRequestDto dto) {
+        if (!VideoLinkPolicy.isAllowed(dto.videoLink())) {
+            throw new InvalidVideoLinkException("INVALID_VIDEO_LINK");
+        }
+
         userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("USER_NOT_FOUND"));
 
@@ -30,8 +37,8 @@ public class SubmitAttemptService {
             throw new AttemptAlreadyPendingException("User already has a pending attempt");
         }
 
-        Attempt attempt = new Attempt(null, userId, dto.videoLink(), dto.attemptTime(), dto.attemptDescription(),
-                dto.attemptCategory(), AttemptStatus.PENDING, false);
+        Attempt attempt = new Attempt(null, userId, dto.videoLink().trim(), dto.attemptTime(), dto.attemptDescription(),
+                dto.attemptCategory(), AttemptStatus.PENDING, false, LocalDateTime.now());
         attemptRepository.save(attempt);
     }
 }

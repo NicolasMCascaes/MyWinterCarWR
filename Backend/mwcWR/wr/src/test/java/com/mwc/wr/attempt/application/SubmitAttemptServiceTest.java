@@ -1,6 +1,7 @@
 package com.mwc.wr.attempt.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -24,6 +25,7 @@ import com.mwc.wr.attempt.domain.model.AttemptStatus;
 import com.mwc.wr.attempt.domain.model.Category;
 import com.mwc.wr.attempt.domain.repository.AttemptRepository;
 import com.mwc.wr.shared.exception.AttemptAlreadyPendingException;
+import com.mwc.wr.shared.exception.InvalidVideoLinkException;
 import com.mwc.wr.shared.exception.ResourceNotFoundException;
 import com.mwc.wr.user.domain.model.User;
 import com.mwc.wr.user.domain.repository.UserRepository;
@@ -39,7 +41,7 @@ public class SubmitAttemptServiceTest {
     private SubmitAttemptService submitService;
 
     private final UUID userId = UUID.randomUUID();
-    private final AttemptRequestDto dto = new AttemptRequestDto("video link", LocalTime.of(0, 12, 34),
+    private final AttemptRequestDto dto = new AttemptRequestDto("https://www.youtube.com/watch?v=abc", LocalTime.of(0, 12, 34),
             "description", Category.RALLY);
 
     @BeforeEach
@@ -60,6 +62,7 @@ public class SubmitAttemptServiceTest {
         assertEquals(userId, saved.getUserId());
         assertEquals(AttemptStatus.PENDING, saved.getAttemptStatus());
         assertEquals(false, saved.getIsRecord());
+        assertNotNull(saved.getSubmittedAt());
     }
 
     @Test
@@ -76,6 +79,15 @@ public class SubmitAttemptServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> submitService.submitAttempt(userId, dto));
+        verify(attemptRepository, never()).save(any());
+    }
+
+    @Test
+    public void submitAttempt_throws_whenVideoLinkIsNotAllowed() {
+        AttemptRequestDto invalid = new AttemptRequestDto("https://example.com/video.mp4", LocalTime.of(0, 12),
+                null, Category.RALLY);
+
+        assertThrows(InvalidVideoLinkException.class, () -> submitService.submitAttempt(userId, invalid));
         verify(attemptRepository, never()).save(any());
     }
 }

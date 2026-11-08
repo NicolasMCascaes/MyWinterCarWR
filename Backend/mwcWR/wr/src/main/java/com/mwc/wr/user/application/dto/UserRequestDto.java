@@ -4,5 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 
 public record UserRequestDto(@NotBlank(message = "Field email can not be null") String email,
                 @NotBlank(message = "Field password can not be null") String password,
-                @NotBlank(message = "Username can not be null") String username) {
+                @NotBlank(message = "Username can not be null") String username,
+                @NotBlank(message = "Country can not be null") String country) {
 }

@@ -1,0 +1,3 @@
+ALTER TABLE attempts ADD COLUMN reviewed_by UUID REFERENCES mwc_users(id);
+
+ALTER TABLE attempts ADD COLUMN reviewed_at TIMESTAMP WITHOUT TIME ZONE;

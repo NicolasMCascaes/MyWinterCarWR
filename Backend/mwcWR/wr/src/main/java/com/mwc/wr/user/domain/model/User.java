@@ -10,8 +10,10 @@ public class User {
     private String password;
     private Roles role;
     private LocalDateTime createdAt;
+    private String country;
 
-    public User(UUID id, String email, String username, String password, Roles role, LocalDateTime createdAt) {
+    public User(UUID id, String email, String username, String password, Roles role, LocalDateTime createdAt,
+            String country) {
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("Email cannot be null");
         }
@@ -30,6 +32,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.createdAt = createdAt;
+        this.country = country;
     }
 
     public User() {
@@ -95,4 +98,11 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 }

@@ -1,6 +1,7 @@
 package com.mwc.wr.attempt.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -33,6 +34,8 @@ class ReviewAttemptServiceTest {
     @Mock
     private RegisterRecordService registerRecordService;
 
+    private static final UUID MODERATOR = UUID.randomUUID();
+
     private ReviewAttemptService service;
 
     @BeforeEach
@@ -42,7 +45,8 @@ class ReviewAttemptServiceTest {
     }
 
     private Attempt attempt(AttemptStatus status) {
-        return new Attempt(1L, UUID.randomUUID(), "link", LocalTime.of(0, 10), "desc", Category.RALLY, status, false);
+        return new Attempt(1L, UUID.randomUUID(), "link", LocalTime.of(0, 10), "desc", Category.RALLY, status, false,
+                null);
     }
 
     @Test
@@ -50,9 +54,11 @@ class ReviewAttemptServiceTest {
         Attempt attempt = attempt(AttemptStatus.PENDING);
         when(attemptRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(attempt));
 
-        service.acceptAttempt(1L);
+        service.acceptAttempt(1L, MODERATOR);
 
         assertEquals(AttemptStatus.APPROVED, attempt.getAttemptStatus());
+        assertEquals(MODERATOR, attempt.getReviewedBy());
+        assertNotNull(attempt.getReviewedAt());
         verify(attemptRepository).save(attempt);
         verify(registerRecordService).recalculatePodium(Category.RALLY);
     }
@@ -61,7 +67,7 @@ class ReviewAttemptServiceTest {
     void acceptAttempt_throws_whenAlreadyApproved() {
         when(attemptRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(attempt(AttemptStatus.APPROVED)));
 
-        assertThrows(InvalidAttemptStatusException.class, () -> service.acceptAttempt(1L));
+        assertThrows(InvalidAttemptStatusException.class, () -> service.acceptAttempt(1L, MODERATOR));
         verify(attemptRepository, never()).save(any());
         verify(registerRecordService, never()).recalculatePodium(any());
     }
@@ -71,9 +77,11 @@ class ReviewAttemptServiceTest {
         Attempt attempt = attempt(AttemptStatus.PENDING);
         when(attemptRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(attempt));
 
-        service.rejectAttempt(1L);
+        service.rejectAttempt(1L, MODERATOR);
 
         assertEquals(AttemptStatus.REJECTED, attempt.getAttemptStatus());
+        assertEquals(MODERATOR, attempt.getReviewedBy());
+        assertNotNull(attempt.getReviewedAt());
         verify(attemptRepository).save(attempt);
         verify(registerRecordService, never()).recalculatePodium(any());
     }
@@ -82,13 +90,13 @@ class ReviewAttemptServiceTest {
     void rejectAttempt_throws_whenAlreadyRejected() {
         when(attemptRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(attempt(AttemptStatus.REJECTED)));
 
-        assertThrows(InvalidAttemptStatusException.class, () -> service.rejectAttempt(1L));
+        assertThrows(InvalidAttemptStatusException.class, () -> service.rejectAttempt(1L, MODERATOR));
     }
 
     @Test
     void acceptAttempt_throws_whenNotFound() {
         when(attemptRepository.findByIdForUpdate(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.acceptAttempt(1L));
+        assertThrows(ResourceNotFoundException.class, () -> service.acceptAttempt(1L, MODERATOR));
     }
 }

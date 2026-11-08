@@ -6,14 +6,12 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mwc.wr.attempt.domain.model.Category;
 import com.mwc.wr.record.application.dto.RecordDetails;
 import com.mwc.wr.record.infrastructure.persistence.entity.RecordEntity;
 
-@Repository
 public interface SpringDataRecordRepository extends JpaRepository<RecordEntity, Long> {
         @Query("UPDATE RecordEntity r SET r.isActive = false WHERE r.idRecord = ?1")
         @Modifying(clearAutomatically = true, flushAutomatically = true)

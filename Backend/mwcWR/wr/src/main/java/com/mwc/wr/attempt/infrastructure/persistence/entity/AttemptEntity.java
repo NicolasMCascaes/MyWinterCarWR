@@ -1,5 +1,6 @@
 package com.mwc.wr.attempt.infrastructure.persistence.entity;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import com.mwc.wr.attempt.domain.model.AttemptStatus;
@@ -41,9 +42,17 @@ public class AttemptEntity {
     private AttemptStatus attemptStatus;
     @Column(name = "is_record")
     private Boolean isRecord;
+    @Column(name = "submitted_at")
+    private LocalDateTime submittedAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewed_by")
+    private UserEntity reviewer;
+    @Column(name = "reviewed_at")
+    private LocalDateTime reviewedAt;
 
     public AttemptEntity(Long idAttempt, UserEntity userId, String videoLink, LocalTime attemptTime,
-            String attemptDescription, Category attemptCategory, AttemptStatus attemptStatus, Boolean isRecord) {
+            String attemptDescription, Category attemptCategory, AttemptStatus attemptStatus, Boolean isRecord,
+            LocalDateTime submittedAt) {
         this.idAttempt = idAttempt;
         this.user = userId;
         this.videoLink = videoLink;
@@ -52,6 +61,7 @@ public class AttemptEntity {
         this.attemptCategory = attemptCategory;
         this.attemptStatus = attemptStatus;
         this.isRecord = isRecord;
+        this.submittedAt = submittedAt;
     }
 
     public AttemptEntity() {
@@ -126,4 +136,28 @@ public class AttemptEntity {
         this.attemptDescription = attemptDescription;
     }
 
+
+    public LocalDateTime getSubmittedAt() {
+        return submittedAt;
+    }
+
+    public void setSubmittedAt(LocalDateTime submittedAt) {
+        this.submittedAt = submittedAt;
+    }
+
+    public UserEntity getReviewer() {
+        return reviewer;
+    }
+
+    public void setReviewer(UserEntity reviewer) {
+        this.reviewer = reviewer;
+    }
+
+    public LocalDateTime getReviewedAt() {
+        return reviewedAt;
+    }
+
+    public void setReviewedAt(LocalDateTime reviewedAt) {
+        this.reviewedAt = reviewedAt;
+    }
 }

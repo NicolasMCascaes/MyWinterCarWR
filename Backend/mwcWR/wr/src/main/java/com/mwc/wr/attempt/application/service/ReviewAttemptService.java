@@ -1,5 +1,7 @@
 package com.mwc.wr.attempt.application.service;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,17 +21,17 @@ public class ReviewAttemptService {
     }
 
     @Transactional
-    public void acceptAttempt(Long attemptId) {
+    public void acceptAttempt(Long attemptId, UUID moderatorId) {
         Attempt attempt = findLocked(attemptId);
-        attempt.approve();
+        attempt.approve(moderatorId);
         attemptRepository.save(attempt);
         registerRecordService.recalculatePodium(attempt.getAttemptCategory());
     }
 
     @Transactional
-    public void rejectAttempt(Long attemptId) {
+    public void rejectAttempt(Long attemptId, UUID moderatorId) {
         Attempt attempt = findLocked(attemptId);
-        attempt.reject();
+        attempt.reject(moderatorId);
         attemptRepository.save(attempt);
     }
 

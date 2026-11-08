@@ -1,12 +1,9 @@
 package com.mwc.wr.record.application.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -17,6 +14,7 @@ import com.mwc.wr.attempt.domain.model.Attempt;
 import com.mwc.wr.attempt.domain.model.AttemptStatus;
 import com.mwc.wr.attempt.domain.model.Category;
 import com.mwc.wr.attempt.domain.repository.AttemptRepository;
+import com.mwc.wr.attempt.domain.service.BestAttemptPerUser;
 import com.mwc.wr.record.domain.model.Position;
 import com.mwc.wr.record.domain.model.Record;
 import com.mwc.wr.record.domain.repository.RecordRepository;
@@ -39,7 +37,7 @@ public class RegisterRecordService {
 
         List<Attempt> approved = attemptRepository.findAllByCategoryAndStatusOrderByTime(category,
                 AttemptStatus.APPROVED);
-        List<Attempt> podium = bestAttemptPerUser(approved);
+        List<Attempt> podium = BestAttemptPerUser.select(approved, Attempt::getUserId, PODIUM.length);
         Set<Long> podiumAttemptIds = podium.stream().map(Attempt::getIdAttempt).collect(Collectors.toSet());
 
         Map<Long, Attempt> approvedById = approved.stream()
@@ -79,19 +77,5 @@ public class RegisterRecordService {
                 attemptRepository.save(attempt);
             }
         }
-    }
-
-    private List<Attempt> bestAttemptPerUser(List<Attempt> orderedAttempts) {
-        List<Attempt> podium = new ArrayList<>(PODIUM.length);
-        Set<UUID> users = new HashSet<>();
-        for (Attempt attempt : orderedAttempts) {
-            if (users.add(attempt.getUserId())) {
-                podium.add(attempt);
-                if (podium.size() == PODIUM.length) {
-                    break;
-                }
-            }
-        }
-        return podium;
     }
 }

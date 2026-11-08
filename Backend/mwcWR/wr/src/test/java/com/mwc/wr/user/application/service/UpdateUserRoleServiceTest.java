@@ -37,7 +37,7 @@ class UpdateUserRoleServiceTest {
     @Test
     void execute_promotesUser() {
         UUID id = UUID.randomUUID();
-        User user = new User(id, "a@a.com", "a", "hash", Roles.USER, LocalDateTime.now());
+        User user = new User(id, "a@a.com", "a", "hash", Roles.USER, LocalDateTime.now(), "BR");
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
 
         service.execute(id, Roles.MODERATOR);

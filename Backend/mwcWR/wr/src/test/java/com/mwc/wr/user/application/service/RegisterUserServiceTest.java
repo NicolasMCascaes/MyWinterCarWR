@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.mwc.wr.shared.exception.InvalidCountryException;
 import com.mwc.wr.shared.exception.UserAlreadyExistsException;
 import com.mwc.wr.user.application.dto.UserRequestDto;
 import com.mwc.wr.user.domain.model.Roles;
@@ -39,7 +40,7 @@ class RegisterUserServiceTest {
 
     @Test
     public void execute_shouldSaveUserWithRoleUser_WhenDataIsValid() {
-        UserRequestDto dto = new UserRequestDto(email, password, username);
+        UserRequestDto dto = new UserRequestDto(email, password, username, "br");
         Mockito.when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
         Mockito.when(userRepository.existsByEmail(email)).thenReturn(false);
 
@@ -49,12 +50,21 @@ class RegisterUserServiceTest {
         Mockito.verify(userRepository).save(captor.capture());
         assertEquals(Roles.USER, captor.getValue().getRole());
         assertEquals("encodedPassword", captor.getValue().getPassword());
+        assertEquals("BR", captor.getValue().getCountry());
+    }
+
+    @Test
+    public void execute_shouldntSaveUser_WhenCountryIsInvalid() {
+        UserRequestDto dto = new UserRequestDto(email, password, username, "XX");
+
+        assertThrows(InvalidCountryException.class, () -> registerUserService.execute(dto));
+        Mockito.verify(userRepository, Mockito.never()).save(Mockito.any());
     }
 
     @Test
     public void execute_shouldntSaveUser_WhenEmailAlreadyExists() {
         Mockito.when(userRepository.existsByEmail(email)).thenReturn(true);
-        UserRequestDto dto = new UserRequestDto(email, password, username);
+        UserRequestDto dto = new UserRequestDto(email, password, username, "br");
 
         assertThrows(UserAlreadyExistsException.class, () -> registerUserService.execute(dto));
         Mockito.verify(userRepository, Mockito.never()).save(Mockito.any());
@@ -63,7 +73,7 @@ class RegisterUserServiceTest {
     @Test
     public void execute_shouldntSaveUser_WhenUsernameAlreadyExists() {
         Mockito.when(userRepository.existsByUsername(username)).thenReturn(true);
-        UserRequestDto dto = new UserRequestDto(email, password, username);
+        UserRequestDto dto = new UserRequestDto(email, password, username, "br");
 
         assertThrows(UserAlreadyExistsException.class, () -> registerUserService.execute(dto));
         Mockito.verify(userRepository, Mockito.never()).save(Mockito.any());
