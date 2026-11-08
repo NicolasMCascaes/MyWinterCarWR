@@ -21,3 +21,8 @@ export function countryName(code: string): string {
 export const COUNTRIES: Country[] = ISO_CODES.map((code) => ({ code, name: countryName(code) })).sort(
   (a, b) => a.name.localeCompare(b.name),
 )
+
+export function guessCountry(locale: string | undefined): string {
+  const region = locale?.split('-')[1]?.toUpperCase()
+  return region && COUNTRIES.some((country) => country.code === region) ? region : ''
+}

@@ -1,16 +1,21 @@
 import { Outlet } from 'react-router-dom'
 import { Header, type NavItem } from '../../components/layout/Header'
+import { UserMenu } from '../../features/auth/UserMenu'
+import { useAuth } from '../../features/auth/useAuth'
 
-const PUBLIC_NAV: NavItem[] = [
+const BASE_NAV: NavItem[] = [
   { to: '/leaderboard', label: 'Leaderboard' },
   { to: '/categories', label: 'Compete now!' },
-  { to: '/login', label: 'Login' },
 ]
 
+const GUEST_NAV: NavItem[] = [...BASE_NAV, { to: '/login', label: 'Login' }]
+
 export function PublicLayout() {
+  const { user } = useAuth()
+
   return (
     <div className="flex min-h-dvh flex-col">
-      <Header nav={PUBLIC_NAV} />
+      <Header nav={user ? BASE_NAV : GUEST_NAV} right={user && <UserMenu />} />
       <Outlet />
     </div>
   )

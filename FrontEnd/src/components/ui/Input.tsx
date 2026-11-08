@@ -1,24 +1,23 @@
 import { useId, type InputHTMLAttributes, type ReactNode, type Ref } from 'react'
 import { cn } from '../../lib/cn'
+import { Field } from './Field'
+import { describedBy, fieldControlClass } from './fieldStyles'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string
   error?: string
   hint?: string
   icon?: ReactNode
+  trailing?: ReactNode
   ref?: Ref<HTMLInputElement>
 }
 
-export function Input({ label, error, hint, icon, className, id, ref, ...props }: InputProps) {
+export function Input({ label, error, hint, icon, trailing, className, id, ref, ...props }: InputProps) {
   const generatedId = useId()
   const inputId = id ?? generatedId
-  const describedBy = error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor={inputId} className="font-display text-sm font-semibold text-muted">
-        {label}
-      </label>
+    <Field id={inputId} label={label} error={error} hint={hint}>
       <div className="relative">
         {icon && (
           <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted">
@@ -29,28 +28,18 @@ export function Input({ label, error, hint, icon, className, id, ref, ...props }
           ref={ref}
           id={inputId}
           aria-invalid={error ? true : undefined}
-          aria-describedby={describedBy}
+          aria-describedby={describedBy(inputId, error, hint)}
           className={cn(
-            'h-12 w-full rounded-xl border bg-surface-2 px-4 text-white transition-colors placeholder:text-muted/60',
-            'focus:border-accent focus:outline-none',
+            fieldControlClass,
             Boolean(icon) && 'pl-10',
+            Boolean(trailing) && 'pr-12',
             error ? 'border-danger' : 'border-border',
             className,
           )}
           {...props}
         />
+        {trailing && <span className="absolute inset-y-0 right-2 flex items-center">{trailing}</span>}
       </div>
-      {error ? (
-        <p id={`${inputId}-error`} className="text-sm text-danger">
-          {error}
-        </p>
-      ) : (
-        hint && (
-          <p id={`${inputId}-hint`} className="text-sm text-muted">
-            {hint}
-          </p>
-        )
-      )}
-    </div>
+    </Field>
   )
 }

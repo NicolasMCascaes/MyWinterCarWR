@@ -40,7 +40,9 @@ Pages compose feature components; feature components compose `ui` components. Da
 - Categories used by the UI: `RALLY`, `ICE_RACE`, `FULL_ASSEMBLY`, `DEATH`. The backend also has `RALLY_RACE`, intentionally unused for now.
 - Typography: Freeman (Google Fonts, single weight); weight synthesis is disabled, so `font-bold` does not fake bold.
 - Roles: `USER`, `MODERATOR`, `ADMIN`. The backend checks exact roles (no hierarchy).
-- Login returns `{ token, username }`; the JWT carries `id`, `email`, `username`, `role`.
+- Login returns `{ token, username }`; the JWT carries `id`, `email`, `username`, `role`. Register returns no body, so the UI logs in right after registering.
+- Session: token in `localStorage` (`mwc.token`), managed by `features/auth/AuthProvider`; read it with `useAuth()`. Protect routes with `<RequireAuth roles={[...]}>`.
+- Unknown email on login returns 404 and wrong password 401; the UI shows the same message for both.
 - Attempt time is sent as `HH:mm:ss` or `HH:mm:ss.SS` (`lib/time.ts`).
 - Video links: YouTube or Twitch only (`lib/video.ts` mirrors the backend rule).
 - Errors come as `{ errorMessage, errorCode }` and are turned into `ApiError`.

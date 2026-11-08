@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react'
 import { createBrowserRouter, type RouteObject } from 'react-router-dom'
 import { Spinner } from '../components/ui'
 import { NotFoundPage } from '../features/errors/NotFoundPage'
+import { LoginPage } from '../features/auth/LoginPage'
+import { SignupPage } from '../features/auth/SignupPage'
 import { CategorySelectPage } from '../features/categories/CategorySelectPage'
 import { LandingPage } from '../features/landing/LandingPage'
 import { LeaderboardPage } from '../features/leaderboard/LeaderboardPage'
@@ -29,6 +31,8 @@ export const router = createBrowserRouter([
       { path: '/', element: <LandingPage /> },
       { path: '/categories', element: <CategorySelectPage /> },
       { path: '/leaderboard/:category?', element: <LeaderboardPage /> },
+      { path: '/login', element: <LoginPage /> },
+      { path: '/signup', element: <SignupPage /> },
       ...devRoutes,
       { path: '*', element: <NotFoundPage /> },
     ],
