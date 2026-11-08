@@ -29,7 +29,7 @@ export function Header({ nav = [], center, right }: HeaderProps) {
           />
         </Link>
         {center}
-        <nav className="flex items-center gap-4 sm:gap-6">
+        <nav className="flex items-center gap-3 sm:gap-6">
           {nav.map((item) => (
             <NavLink
               key={item.to}

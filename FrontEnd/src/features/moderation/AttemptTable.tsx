@@ -64,39 +64,41 @@ function renderColumn(column: AttemptColumn, attempt: AttemptDetails) {
   }
 }
 
-const HIDDEN_ON_MOBILE: AttemptColumn[] = ['country', 'reviewedBy']
+const RESPONSIVE_CLASS: Record<AttemptColumn, string> = {
+  submitted: 'hidden sm:table-cell',
+  reviewedAt: 'hidden sm:table-cell',
+  country: 'hidden md:table-cell',
+  reviewedBy: 'hidden md:table-cell',
+}
 
 export function AttemptTable({ attempts, columns, currentUserId, caption }: AttemptTableProps) {
   const navigate = useNavigate()
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-border bg-bg-deep/60 p-3 sm:p-5">
-      <table className="w-full border-separate border-spacing-y-2 text-center">
+    <div className="overflow-x-auto rounded-2xl border border-border bg-bg-deep/60 p-2 sm:p-5">
+      <table className="w-full border-separate border-spacing-y-2 text-center text-sm sm:text-base">
         <caption className="sr-only">{caption}</caption>
         <thead>
           <tr className="font-display text-muted">
-            <th scope="col" className="px-3 text-left font-normal">
+            <th scope="col" className="px-2 text-left font-normal sm:px-3">
               Username
             </th>
-            <th scope="col" className="px-2 font-normal">
+            <th scope="col" className="px-1.5 font-normal sm:px-2">
               Category
             </th>
-            <th scope="col" className="px-2 font-normal">
+            <th scope="col" className="px-1.5 font-normal sm:px-2">
               Time
             </th>
             {columns.map((column) => (
               <th
                 key={column}
                 scope="col"
-                className={cn(
-                  'px-2 font-normal',
-                  HIDDEN_ON_MOBILE.includes(column) && 'hidden md:table-cell',
-                )}
+                className={cn('px-1.5 font-normal sm:px-2', RESPONSIVE_CLASS[column])}
               >
                 {HEADERS[column]}
               </th>
             ))}
-            <th scope="col" className="px-2 font-normal">
+            <th scope="col" className="px-1.5 font-normal sm:px-2">
               Status
             </th>
           </tr>
@@ -112,7 +114,7 @@ export function AttemptTable({ attempts, columns, currentUserId, caption }: Atte
                 style={{ animationDelay: `${Math.min(index, 10) * 30}ms` }}
                 className="animate-rise cursor-pointer bg-surface-2 transition-colors hover:bg-surface-3"
               >
-                <td className="rounded-l-xl px-3 py-3 text-left font-display">
+                <td className="rounded-l-xl px-2 py-3 text-left font-display sm:px-3">
                   <Link
                     to={detailPath}
                     onClick={(event) => event.stopPropagation()}
@@ -121,27 +123,23 @@ export function AttemptTable({ attempts, columns, currentUserId, caption }: Atte
                     {attempt.username}
                   </Link>
                   {own && (
-                    <span className="ml-2 rounded-full bg-accent/20 px-2 py-0.5 text-xs whitespace-nowrap text-accent">
+                    <span className="mt-1 block w-fit rounded-full bg-accent/20 px-2 py-0.5 text-xs whitespace-nowrap text-accent sm:mt-0 sm:ml-2 sm:inline">
                       Your run
                     </span>
                   )}
                 </td>
-                <td className="px-2 whitespace-nowrap">
+                <td className="px-1.5 whitespace-nowrap sm:px-2">
                   <CategoryLabel category={attempt.attemptCategory} />
                 </td>
-                <td className="px-2 font-display tabular-nums">{formatRunTime(attempt.attemptTime)}</td>
+                <td className="px-1.5 font-display tabular-nums sm:px-2">
+                  {formatRunTime(attempt.attemptTime)}
+                </td>
                 {columns.map((column) => (
-                  <td
-                    key={column}
-                    className={cn(
-                      'px-2 text-sm',
-                      HIDDEN_ON_MOBILE.includes(column) && 'hidden md:table-cell',
-                    )}
-                  >
+                  <td key={column} className={cn('px-2 text-sm', RESPONSIVE_CLASS[column])}>
                     {renderColumn(column, attempt)}
                   </td>
                 ))}
-                <td className="rounded-r-xl px-2">
+                <td className="rounded-r-xl px-1.5 sm:px-2">
                   <StatusBadge status={attempt.attemptStatus} />
                 </td>
               </tr>

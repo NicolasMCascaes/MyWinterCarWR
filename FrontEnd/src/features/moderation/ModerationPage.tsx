@@ -11,7 +11,11 @@ interface ModerationPageProps {
 
 export function ModerationPage({ title, subtitle, actions, children }: ModerationPageProps) {
   return (
-    <main className="flex flex-col gap-6 px-4 pt-2 pb-10 sm:px-8">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="flex flex-col gap-6 px-4 pt-2 pb-10 outline-none sm:px-8"
+    >
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="font-display text-4xl">{title}</h1>

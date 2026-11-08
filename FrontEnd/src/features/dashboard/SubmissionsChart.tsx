@@ -1,4 +1,4 @@
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts'
 import type { StatsPeriod } from '../moderation/types'
 import { ChartCard, ChartTooltipBox } from './ChartCard'
 import type { DayPoint } from './dashboardData'
@@ -19,62 +19,65 @@ export function SubmissionsChart({ points, period, total }: SubmissionsChartProp
       className="lg:col-span-2"
     >
       <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
-          <AreaChart data={points} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
-            <defs>
-              <linearGradient id="submissions-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--color-accent)" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="var(--color-accent)" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid vertical={false} stroke="var(--color-border)" strokeDasharray="0" />
-            <XAxis
-              dataKey="label"
-              tick={AXIS_TICK}
-              tickLine={false}
-              axisLine={{ stroke: 'var(--color-border)' }}
-              interval="preserveStartEnd"
-              minTickGap={16}
-            />
-            <YAxis allowDecimals={false} tick={AXIS_TICK} tickLine={false} axisLine={false} width={40} />
-            <Tooltip
-              cursor={{ stroke: 'var(--color-muted)', strokeWidth: 1 }}
-              content={({ active, payload }) => {
-                const point = payload?.[0]?.payload as DayPoint | undefined
-                if (!active || !point) {
-                  return null
-                }
-                return (
-                  <ChartTooltipBox
-                    title={point.fullLabel}
-                    rows={[
-                      {
-                        label: 'Submissions',
-                        value: String(point.submissions),
-                        color: 'var(--color-accent)',
-                      },
-                    ]}
-                  />
-                )
-              }}
-            />
-            <Area
-              type="monotone"
-              dataKey="submissions"
-              name="Submissions"
-              stroke="var(--color-accent)"
-              strokeWidth={2}
-              fill="url(#submissions-fill)"
-              activeDot={{
-                r: 5,
-                stroke: 'var(--color-surface)',
-                strokeWidth: 2,
-                fill: 'var(--color-accent)',
-              }}
-              isAnimationActive={false}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        <AreaChart
+          responsive
+          style={{ width: '100%', height: '100%' }}
+          data={points}
+          margin={{ top: 8, right: 8, bottom: 0, left: -16 }}
+        >
+          <defs>
+            <linearGradient id="submissions-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--color-accent)" stopOpacity={0.35} />
+              <stop offset="100%" stopColor="var(--color-accent)" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid vertical={false} stroke="var(--color-border)" strokeDasharray="0" />
+          <XAxis
+            dataKey="label"
+            tick={AXIS_TICK}
+            tickLine={false}
+            axisLine={{ stroke: 'var(--color-border)' }}
+            interval="preserveStartEnd"
+            minTickGap={16}
+          />
+          <YAxis allowDecimals={false} tick={AXIS_TICK} tickLine={false} axisLine={false} width={40} />
+          <Tooltip
+            cursor={{ stroke: 'var(--color-muted)', strokeWidth: 1 }}
+            content={({ active, payload }) => {
+              const point = payload?.[0]?.payload as DayPoint | undefined
+              if (!active || !point) {
+                return null
+              }
+              return (
+                <ChartTooltipBox
+                  title={point.fullLabel}
+                  rows={[
+                    {
+                      label: 'Submissions',
+                      value: String(point.submissions),
+                      color: 'var(--color-accent)',
+                    },
+                  ]}
+                />
+              )
+            }}
+          />
+          <Area
+            type="monotone"
+            dataKey="submissions"
+            name="Submissions"
+            stroke="var(--color-accent)"
+            strokeWidth={2}
+            fill="url(#submissions-fill)"
+            activeDot={{
+              r: 5,
+              stroke: 'var(--color-surface)',
+              strokeWidth: 2,
+              fill: 'var(--color-accent)',
+            }}
+            isAnimationActive={false}
+          />
+        </AreaChart>
       </div>
       <details className="text-sm text-muted">
         <summary className="cursor-pointer select-none hover:text-white">View data</summary>

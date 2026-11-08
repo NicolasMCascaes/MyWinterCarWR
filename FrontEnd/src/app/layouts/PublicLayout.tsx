@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { Header, type NavItem } from '../../components/layout/Header'
+import { SkipLink } from '../../components/layout/SkipLink'
 import { UserMenu } from '../../features/auth/UserMenu'
 import { useAuth } from '../../features/auth/useAuth'
 
@@ -17,6 +18,7 @@ export function PublicLayout() {
 
   return (
     <div className="flex min-h-dvh flex-col">
+      <SkipLink />
       <Header
         nav={!user ? GUEST_NAV : user.role === 'MODERATOR' ? MODERATOR_NAV : BASE_NAV}
         right={user && <UserMenu />}

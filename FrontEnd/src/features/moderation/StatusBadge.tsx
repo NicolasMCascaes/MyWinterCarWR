@@ -10,7 +10,12 @@ const STYLES: Record<AttemptStatus, { label: string; className: string }> = {
 export function StatusBadge({ status }: { status: AttemptStatus }) {
   const style = STYLES[status]
   return (
-    <span className={cn('inline-block rounded-md px-2.5 py-0.5 font-display text-sm', style.className)}>
+    <span
+      className={cn(
+        'inline-block rounded-md px-2 py-0.5 font-display text-xs sm:px-2.5 sm:text-sm',
+        style.className,
+      )}
+    >
       {style.label}
     </span>
   )

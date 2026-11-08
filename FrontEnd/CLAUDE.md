@@ -31,7 +31,9 @@ Pages compose feature components; feature components compose `ui` components. Da
 
 ## Design rules
 - Use only theme tokens (`bg-surface`, `text-muted`, `bg-accent`, `--color-cat-*`...). No loose hex values in components.
-- Icons only from lucide-react; flags only through the `Flag` component.
+- Icons only from lucide-react; flags only through the `Flag` component (one SVG file per country from `flag-icons`, never inlined; see `build.assetsInlineLimit` in `vite.config.ts`).
+- Pages render inside a `<main id="main-content">` (`PageContainer` or `ModerationPage`) so the skip link works; animations must stay disabled under `prefers-reduced-motion`.
+- Keep heavy or role-specific pages lazy loaded in `app/router.tsx` (auth forms, submit, moderation, dashboard).
 - Category labels, colors and images come from `features/categories/categories.ts`.
 - Category colors (`--color-cat-*`) are a categorical chart palette validated for the dark surface (lightness band, CVD and normal-vision separation). Re-run the dataviz palette validator before changing them.
 - Charts use Recharts (only in `features/dashboard`, lazy loaded). Every chart has a tooltip, a visible legend or labels, and a data view.

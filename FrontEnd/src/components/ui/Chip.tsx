@@ -29,7 +29,11 @@ export function Chip({
       {...props}
     >
       {dotColor && (
-        <span className="size-2.5 rounded-full" style={{ backgroundColor: dotColor }} aria-hidden />
+        <span
+          className={cn('size-2.5 rounded-full', selected && 'ring-2 ring-white')}
+          style={{ backgroundColor: dotColor }}
+          aria-hidden
+        />
       )}
       {children}
     </button>

@@ -1,6 +1,7 @@
 import { ArrowLeft, ClockAlert, History, LayoutDashboard, type LucideIcon } from 'lucide-react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import logo from '../../assets/logo.png'
+import { SkipLink } from '../../components/layout/SkipLink'
 import { cn } from '../../lib/cn'
 import { UserMenu } from '../auth/UserMenu'
 import { usePendingAttempts } from './api'
@@ -9,8 +10,6 @@ interface SidebarItem {
   to: string
   label: string
   icon: LucideIcon
-  end?: boolean
-  soon?: boolean
 }
 
 const ITEMS: SidebarItem[] = [
@@ -36,34 +35,24 @@ function PendingCount() {
 
 function SidebarLink({ item }: { item: SidebarItem }) {
   const Icon = item.icon
-  const content = (
-    <>
-      <Icon className="size-6 shrink-0" aria-hidden />
-      <span className="whitespace-nowrap">{item.label}</span>
-      {item.soon && (
-        <span className="ml-auto rounded-full bg-surface-3 px-2 py-0.5 text-xs text-muted">Soon</span>
-      )}
-      {item.to === '/moderation/queue' && <PendingCount />}
-    </>
-  )
-  const base = 'flex items-center gap-3 rounded-xl px-3 py-2.5 font-display text-lg transition-colors'
-
-  if (item.soon) {
-    return (
-      <span aria-disabled="true" className={cn(base, 'cursor-not-allowed text-muted/60')}>
-        {content}
-      </span>
-    )
-  }
   return (
     <NavLink
       to={item.to}
-      end={item.end}
+      aria-label={item.label}
       className={({ isActive }) =>
-        cn(base, isActive ? 'bg-surface-3 text-white' : 'text-white/80 hover:bg-white/5 hover:text-white')
+        cn(
+          'flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 font-display text-lg transition-colors',
+          isActive ? 'bg-surface-3 text-white' : 'text-white/80 hover:bg-white/5 hover:text-white',
+        )
       }
     >
-      {content}
+      {({ isActive }) => (
+        <>
+          <Icon className="size-6 shrink-0" aria-hidden />
+          <span className={cn('whitespace-nowrap', !isActive && 'hidden sm:inline')}>{item.label}</span>
+          {item.to === '/moderation/queue' && <PendingCount />}
+        </>
+      )}
     </NavLink>
   )
 }
@@ -71,6 +60,7 @@ function SidebarLink({ item }: { item: SidebarItem }) {
 export function ModeratorLayout() {
   return (
     <div className="flex min-h-dvh flex-col bg-bg-deep md:flex-row">
+      <SkipLink />
       <aside className="flex shrink-0 flex-col gap-6 bg-sidebar px-4 py-4 md:sticky md:top-0 md:h-dvh md:w-64 md:py-8">
         <Link to="/" className="group flex items-center gap-3 px-2">
           <img

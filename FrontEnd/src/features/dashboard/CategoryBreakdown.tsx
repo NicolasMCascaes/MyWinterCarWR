@@ -1,4 +1,4 @@
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
+import { Cell, Pie, PieChart, Tooltip } from 'recharts'
 import { ChartCard, ChartTooltipBox } from './ChartCard'
 import { formatPercent, type CategorySummary } from './dashboardData'
 
@@ -14,43 +14,41 @@ export function CategoryBreakdown({ categories, totalRuns }: CategoryBreakdownPr
     <ChartCard title="Total runs per category" subtitle="All time" className="lg:row-span-2">
       <div className="relative mx-auto aspect-square w-full max-w-64">
         {totalRuns > 0 ? (
-          <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
-            <PieChart>
-              <Pie
-                data={slices}
-                dataKey="total"
-                nameKey="info.label"
-                innerRadius="62%"
-                outerRadius="100%"
-                startAngle={90}
-                endAngle={-270}
-                stroke="var(--color-surface)"
-                strokeWidth={2}
-                isAnimationActive={false}
-              >
-                {slices.map((slice) => (
-                  <Cell key={slice.info.id} fill={slice.info.colorVar} />
-                ))}
-              </Pie>
-              <Tooltip
-                content={({ active, payload }) => {
-                  const slice = payload?.[0]?.payload as CategorySummary | undefined
-                  if (!active || !slice) {
-                    return null
-                  }
-                  return (
-                    <ChartTooltipBox
-                      title={slice.info.label}
-                      rows={[
-                        { label: 'Runs', value: String(slice.total), color: slice.info.colorVar },
-                        { label: 'Share', value: formatPercent(slice.share) },
-                      ]}
-                    />
-                  )
-                }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+          <PieChart responsive style={{ width: '100%', height: '100%' }}>
+            <Pie
+              data={slices}
+              dataKey="total"
+              nameKey="info.label"
+              innerRadius="62%"
+              outerRadius="100%"
+              startAngle={90}
+              endAngle={-270}
+              stroke="var(--color-surface)"
+              strokeWidth={2}
+              isAnimationActive={false}
+            >
+              {slices.map((slice) => (
+                <Cell key={slice.info.id} fill={slice.info.colorVar} />
+              ))}
+            </Pie>
+            <Tooltip
+              content={({ active, payload }) => {
+                const slice = payload?.[0]?.payload as CategorySummary | undefined
+                if (!active || !slice) {
+                  return null
+                }
+                return (
+                  <ChartTooltipBox
+                    title={slice.info.label}
+                    rows={[
+                      { label: 'Runs', value: String(slice.total), color: slice.info.colorVar },
+                      { label: 'Share', value: formatPercent(slice.share) },
+                    ]}
+                  />
+                )
+              }}
+            />
+          </PieChart>
         ) : (
           <div className="absolute inset-0 rounded-full border-[1.25rem] border-surface-3" aria-hidden />
         )}

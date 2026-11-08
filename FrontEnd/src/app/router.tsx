@@ -2,22 +2,27 @@ import { lazy, Suspense } from 'react'
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router-dom'
 import { Spinner } from '../components/ui'
 import { NotFoundPage } from '../features/errors/NotFoundPage'
-import { LoginPage } from '../features/auth/LoginPage'
 import { RequireAuth } from '../features/auth/RequireAuth'
-import { SignupPage } from '../features/auth/SignupPage'
-import { SubmitRunPage } from '../features/submit/SubmitRunPage'
 import { CategorySelectPage } from '../features/categories/CategorySelectPage'
 import { LandingPage } from '../features/landing/LandingPage'
 import { LeaderboardPage } from '../features/leaderboard/LeaderboardPage'
 import { PublicLayout } from './layouts/PublicLayout'
 
+function RouteFallback() {
+  return <Spinner className="m-auto min-h-dvh" />
+}
+
 const UiShowcasePage = lazy(() => import('../features/dev/UiShowcasePage'))
+const SubmitRunPage = lazy(() =>
+  import('../features/submit/SubmitRunPage').then((module) => ({ default: module.SubmitRunPage })),
+)
 const ModeratorLayout = lazy(() =>
   import('../features/moderation/ModeratorLayout').then((module) => ({ default: module.ModeratorLayout })),
 )
 
 const moderationRoutes: RouteObject = {
   path: '/moderation',
+  hydrateFallbackElement: <RouteFallback />,
   element: (
     <RequireAuth roles={['MODERATOR']}>
       <Suspense fallback={<Spinner className="m-auto min-h-dvh" />}>
@@ -69,17 +74,27 @@ export const router = createBrowserRouter([
   moderationRoutes,
   {
     element: <PublicLayout />,
+    hydrateFallbackElement: <RouteFallback />,
     children: [
       { path: '/', element: <LandingPage /> },
       { path: '/categories', element: <CategorySelectPage /> },
       { path: '/leaderboard/:category?', element: <LeaderboardPage /> },
-      { path: '/login', element: <LoginPage /> },
-      { path: '/signup', element: <SignupPage /> },
+      {
+        path: '/login',
+        lazy: () => import('../features/auth/LoginPage').then((module) => ({ Component: module.LoginPage })),
+      },
+      {
+        path: '/signup',
+        lazy: () =>
+          import('../features/auth/SignupPage').then((module) => ({ Component: module.SignupPage })),
+      },
       {
         path: '/submit/:category?',
         element: (
           <RequireAuth roles={['USER', 'MODERATOR']}>
-            <SubmitRunPage />
+            <Suspense fallback={<Spinner className="m-auto" />}>
+              <SubmitRunPage />
+            </Suspense>
           </RequireAuth>
         ),
       },
