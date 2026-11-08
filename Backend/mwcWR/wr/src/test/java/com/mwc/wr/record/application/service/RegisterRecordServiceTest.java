@@ -132,7 +132,6 @@ class RegisterRecordServiceTest {
         assertEquals(recordsBefore, records.all.size());
     }
 
-
     static class FakeAttemptRepository implements AttemptRepository {
         final Map<Long, Attempt> store = new LinkedHashMap<>();
         long nextId = 1;
@@ -235,6 +234,12 @@ class RegisterRecordServiceTest {
         @Override
         public boolean existsByUserIdAndAttemptStatus(UUID userId, AttemptStatus status) {
             throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<AttemptDetails> findDetailsByUserId(UUID userId) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'findDetailsByUserId'");
         }
     }
 
