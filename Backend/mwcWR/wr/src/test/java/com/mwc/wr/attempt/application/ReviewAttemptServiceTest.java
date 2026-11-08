@@ -25,6 +25,7 @@ import com.mwc.wr.attempt.domain.repository.AttemptRepository;
 import com.mwc.wr.record.application.service.RegisterRecordService;
 import com.mwc.wr.shared.exception.InvalidAttemptStatusException;
 import com.mwc.wr.shared.exception.ResourceNotFoundException;
+import com.mwc.wr.shared.exception.SelfReviewNotAllowedException;
 
 class ReviewAttemptServiceTest {
 
@@ -61,6 +62,19 @@ class ReviewAttemptServiceTest {
         assertNotNull(attempt.getReviewedAt());
         verify(attemptRepository).save(attempt);
         verify(registerRecordService).recalculatePodium(Category.RALLY);
+    }
+
+    @Test
+    void reviewAttempt_throws_whenModeratorReviewsOwnAttempt() {
+        Attempt ownAttempt = new Attempt(1L, MODERATOR, "link", LocalTime.of(0, 10), "desc", Category.RALLY,
+                AttemptStatus.PENDING, false, null);
+        when(attemptRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(ownAttempt));
+
+        assertThrows(SelfReviewNotAllowedException.class, () -> service.acceptAttempt(1L, MODERATOR));
+        assertThrows(SelfReviewNotAllowedException.class, () -> service.rejectAttempt(1L, MODERATOR));
+        assertEquals(AttemptStatus.PENDING, ownAttempt.getAttemptStatus());
+        verify(attemptRepository, never()).save(any());
+        verify(registerRecordService, never()).recalculatePodium(any());
     }
 
     @Test

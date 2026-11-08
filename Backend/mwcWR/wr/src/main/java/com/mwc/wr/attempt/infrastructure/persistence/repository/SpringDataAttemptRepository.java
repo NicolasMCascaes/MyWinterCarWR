@@ -51,6 +51,9 @@ public interface SpringDataAttemptRepository extends JpaRepository<AttemptEntity
     @Query(DETAILS_SELECT + " WHERE a.attemptStatus = ?1 ORDER BY a.submittedAt ASC NULLS FIRST, a.idAttempt ASC")
     List<AttemptDetails> findDetailsByStatus(AttemptStatus status);
 
+    @Query(DETAILS_SELECT + " WHERE u.id = ?1 ORDER BY a.submittedAt DESC NULLS LAST, a.idAttempt DESC")
+    List<AttemptDetails> findDetailsByUserId(UUID userId);
+
     @Query(DETAILS_SELECT + " WHERE a.idAttempt = ?1")
     Optional<AttemptDetails> findDetailsById(Long id);
 

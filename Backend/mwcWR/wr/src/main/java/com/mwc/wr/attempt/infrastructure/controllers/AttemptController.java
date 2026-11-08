@@ -54,6 +54,11 @@ public class AttemptController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<List<AttemptDetails>> listMyAttempts(@AuthenticationPrincipal CustomUserDetails principal) {
+        return ResponseEntity.ok(listAttemptService.listMyAttempts(principal.getId()));
+    }
+
     @PatchMapping("/moderator/accept/{id}")
     public ResponseEntity<Void> acceptAttempt(@AuthenticationPrincipal CustomUserDetails moderator,
             @PathVariable Long id) {

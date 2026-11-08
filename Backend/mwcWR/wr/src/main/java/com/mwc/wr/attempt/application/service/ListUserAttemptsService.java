@@ -25,6 +25,10 @@ public class ListUserAttemptsService {
         return toResponse(attemptRepository.findAllByUserId(userId));
     }
 
+    public List<AttemptDetails> listMyAttempts(UUID userId) {
+        return attemptRepository.findDetailsByUserId(userId);
+    }
+
     public List<AttemptResponseDto> listAllAttemptsByCategory(Category category) {
         return toResponse(attemptRepository.findAllByAttemptCategory(category));
     }

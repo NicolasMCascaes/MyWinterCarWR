@@ -38,6 +38,8 @@ public interface AttemptRepository {
 
     Optional<AttemptDetails> findDetailsById(Long id);
 
+    List<AttemptDetails> findDetailsByUserId(UUID userId);
+
     List<AttemptDetails> findReviewedDetails();
 
     List<AttemptDetails> findReviewedDetailsByStatus(AttemptStatus status);

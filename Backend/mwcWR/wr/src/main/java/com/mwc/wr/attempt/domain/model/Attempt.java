@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 import com.mwc.wr.shared.exception.InvalidAttemptStatusException;
+import com.mwc.wr.shared.exception.SelfReviewNotAllowedException;
 
 public class Attempt {
     private Long idAttempt;
@@ -59,6 +60,9 @@ public class Attempt {
     private void review(UUID moderatorId, AttemptStatus result) {
         if (moderatorId == null) {
             throw new IllegalArgumentException("Moderator ID cannot be null");
+        }
+        if (moderatorId.equals(userId)) {
+            throw new SelfReviewNotAllowedException("SELF_REVIEW_NOT_ALLOWED");
         }
         ensurePending();
         this.attemptStatus = result;

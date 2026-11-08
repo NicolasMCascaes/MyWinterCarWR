@@ -43,7 +43,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/user/register", "/user/login").permitAll()
                         .requestMatchers("/records/**").permitAll()
                         .requestMatchers("/user/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/attempt/submit").hasRole("USER")
+                        .requestMatchers("/attempt/submit", "/attempt/me").hasAnyRole("USER", "MODERATOR")
                         .requestMatchers("/attempt/moderator/**").hasRole("MODERATOR")
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex

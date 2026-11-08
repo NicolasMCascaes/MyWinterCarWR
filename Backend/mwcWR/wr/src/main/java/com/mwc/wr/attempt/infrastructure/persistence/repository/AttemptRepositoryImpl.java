@@ -93,6 +93,11 @@ public class AttemptRepositoryImpl implements AttemptRepository {
     }
 
     @Override
+    public List<AttemptDetails> findDetailsByUserId(UUID userId) {
+        return repository.findDetailsByUserId(userId);
+    }
+
+    @Override
     public List<AttemptDetails> findReviewedDetails() {
         return repository.findReviewedDetails();
     }

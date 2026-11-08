@@ -71,6 +71,11 @@ public class GlobalExceptionHandler {
         return build(resolveMessage(ex.getMessage()), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(SelfReviewNotAllowedException.class)
+    public ResponseEntity<ErrorInfo> handleSelfReviewNotAllowedException(SelfReviewNotAllowedException ex) {
+        return build(resolveMessage(ex.getMessage()), HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(InvalidCountryException.class)
     public ResponseEntity<ErrorInfo> handleInvalidCountryException(InvalidCountryException ex) {
         return build(resolveMessage(ex.getMessage()), HttpStatus.BAD_REQUEST);
