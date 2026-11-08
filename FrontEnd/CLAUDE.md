@@ -48,6 +48,7 @@ Pages compose feature components; feature components compose `ui` components. Da
 - `POST /attempt/submit` and `GET /attempt/me` accept `USER` and `MODERATOR` (admins cannot play). Submit returns no body and answers 409 when the user already has a pending attempt; `/attempt/me` lists the user's attempts, newest first. Moderators cannot review their own attempts (403). The submit wizard lives in `features/submit` (route `/submit/:category?`).
 - Video links: YouTube or Twitch only (`lib/video.ts` mirrors the backend rule).
 - Errors come as `{ errorMessage, errorCode }` and are turned into `ApiError`.
+- Moderation (`features/moderation`, routes under `/moderation`, lazy loaded, `MODERATOR` only): queue from `listAllAttemptByStatus?status=PENDING` (oldest first), details from `/attempt/moderator/{id}`, decisions via `PATCH /attempt/moderator/accept|reject/{id}` (409 when already reviewed, 403 on own run), history from `/attempt/moderator/history?status=`. After a decision, invalidate `moderation` queries and, on approval, `leaderboard`.
 
 ## Code style
 - No code comments of any kind; names must explain the code.

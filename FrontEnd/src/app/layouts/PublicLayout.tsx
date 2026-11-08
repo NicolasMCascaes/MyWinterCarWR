@@ -10,12 +10,17 @@ const BASE_NAV: NavItem[] = [
 
 const GUEST_NAV: NavItem[] = [...BASE_NAV, { to: '/login', label: 'Login' }]
 
+const MODERATOR_NAV: NavItem[] = [...BASE_NAV, { to: '/moderation', label: 'Moderation' }]
+
 export function PublicLayout() {
   const { user } = useAuth()
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <Header nav={user ? BASE_NAV : GUEST_NAV} right={user && <UserMenu />} />
+      <Header
+        nav={!user ? GUEST_NAV : user.role === 'MODERATOR' ? MODERATOR_NAV : BASE_NAV}
+        right={user && <UserMenu />}
+      />
       <Outlet />
     </div>
   )

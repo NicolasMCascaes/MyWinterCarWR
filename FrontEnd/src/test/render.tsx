@@ -38,7 +38,13 @@ function base64Url(value: object): string {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
 }
 
-export function fakeToken(claims: { username: string; role: string; exp?: number; email?: string }): string {
+export function fakeToken(claims: {
+  username: string
+  role: string
+  id?: string
+  exp?: number
+  email?: string
+}): string {
   const payload = {
     id: `${claims.username}-id`,
     email: claims.email ?? `${claims.username}@test.local`,
