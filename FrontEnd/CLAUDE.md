@@ -39,12 +39,13 @@ Pages compose feature components; feature components compose `ui` components. Da
 ## Backend contracts
 - Categories used by the UI: `RALLY`, `ICE_RACE`, `FULL_ASSEMBLY`, `DEATH`. The backend also has `RALLY_RACE`, intentionally unused for now.
 - Typography: Freeman (Google Fonts, single weight); weight synthesis is disabled, so `font-bold` does not fake bold.
-- Roles: `USER`, `MODERATOR`, `ADMIN`. The backend checks exact roles (no hierarchy).
+- Roles: `USER`, `MODERATOR`, `ADMIN`. The backend checks roles per route (no hierarchy).
 - Login returns `{ token, username }`; the JWT carries `id`, `email`, `username`, `role`. Register returns no body, so the UI logs in right after registering.
 - Session: token in `localStorage` (`mwc.token`), managed by `features/auth/AuthProvider`; read it with `useAuth()`. Protect routes with `<RequireAuth roles={[...]}>`.
 - Login failures (unknown email or wrong password) return 401 with a generic message.
 - Registration rules (validated in both front and backend): valid email, password 8-128 chars, username 3-20 chars with letters, numbers, `-` and `_`, ISO-2 country.
 - Attempt time is sent as `HH:mm:ss` or `HH:mm:ss.SS` (`lib/time.ts`).
+- `POST /attempt/submit` and `GET /attempt/me` accept `USER` and `MODERATOR` (admins cannot play). Submit returns no body and answers 409 when the user already has a pending attempt; `/attempt/me` lists the user's attempts, newest first. Moderators cannot review their own attempts (403). The submit wizard lives in `features/submit` (route `/submit/:category?`).
 - Video links: YouTube or Twitch only (`lib/video.ts` mirrors the backend rule).
 - Errors come as `{ errorMessage, errorCode }` and are turned into `ApiError`.
 

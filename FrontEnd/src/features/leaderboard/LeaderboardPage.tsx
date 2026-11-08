@@ -1,10 +1,10 @@
-import { RotateCw, Trophy } from 'lucide-react'
+import { RotateCw, Trophy, Upload } from 'lucide-react'
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { PageContainer } from '../../components/layout/PageContainer'
 import { Button, EmptyState, Skeleton } from '../../components/ui'
 import { cn } from '../../lib/cn'
-import { categoryFromSlug, type CategoryInfo } from '../categories/categories'
+import { categoryFromSlug, submitPath, type CategoryInfo } from '../categories/categories'
 import { NotFoundPage } from '../errors/NotFoundPage'
 import { useLeaderboard } from './api'
 import { CategoryTabs } from './CategoryTabs'
@@ -31,9 +31,17 @@ function Leaderboard({ category }: { category: CategoryInfo }) {
   return (
     <PageContainer className="flex flex-col gap-8">
       <header className="flex flex-col gap-4">
-        <h1 className="font-display text-4xl sm:text-5xl">
-          Leaderboard - <span style={{ color: category.colorVar }}>{category.label}</span>
-        </h1>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <h1 className="font-display text-4xl sm:text-5xl">
+            Leaderboard - <span style={{ color: category.colorVar }}>{category.label}</span>
+          </h1>
+          <Link
+            to={submitPath(category)}
+            className="inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-5 font-display text-lg transition-all hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow-[0_0_24px_-6px_var(--color-primary)]"
+          >
+            <Upload className="size-5" aria-hidden /> Submit a run
+          </Link>
+        </div>
         <CategoryTabs current={category} />
       </header>
 

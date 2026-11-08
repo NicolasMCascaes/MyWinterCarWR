@@ -59,3 +59,21 @@ const dateFormatter = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 
 export function formatDate(isoDate: string): string {
   return dateFormatter.format(new Date(isoDate))
 }
+
+export function maskRunTime(input: string): string {
+  const digits = input.replace(/\D/g, '').slice(0, 8)
+  const groups = [digits.slice(0, 2), digits.slice(2, 4), digits.slice(4, 6), digits.slice(6, 8)]
+  return groups.reduce((masked, group, index) => {
+    if (!group) {
+      return masked
+    }
+    if (index === 0) {
+      return group
+    }
+    return `${masked}${index === 3 ? '.' : ':'}${group}`
+  }, '')
+}
+
+export function totalHundredths(time: RunTime): number {
+  return ((time.hours * 60 + time.minutes) * 60 + time.seconds) * 100 + time.hundredths
+}

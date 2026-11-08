@@ -74,6 +74,14 @@ export function categoryFromSlug(slug: string | undefined): CategoryInfo | null 
   return BY_SLUG.get(slug) ?? null
 }
 
+export function categoryBySlug(slug: string | undefined): CategoryInfo | null {
+  return slug === undefined ? null : (BY_SLUG.get(slug) ?? null)
+}
+
+export function submitPath(category?: CategoryInfo): string {
+  return category ? `/submit/${category.slug}` : '/submit'
+}
+
 export function leaderboardPath(category: CategoryInfo): string {
   return `/leaderboard/${category.slug}`
 }

@@ -1,4 +1,4 @@
-import { formatRunTime, parseRunTime, timeAgo, toApiTime } from './time'
+import { formatRunTime, maskRunTime, parseRunTime, timeAgo, toApiTime, totalHundredths } from './time'
 
 describe('parseRunTime', () => {
   it('parses hours, minutes, seconds and hundredths', () => {
@@ -45,5 +45,26 @@ describe('timeAgo', () => {
 
   it('returns just now for recent dates', () => {
     expect(timeAgo('2026-11-08T11:59:40', now)).toBe('just now')
+  })
+})
+
+describe('maskRunTime', () => {
+  it.each([
+    ['', ''],
+    ['1', '1'],
+    ['012', '01:2'],
+    ['01234', '01:23:4'],
+    ['0123456', '01:23:45.6'],
+    ['012345678999', '01:23:45.67'],
+    ['01:23:45.67', '01:23:45.67'],
+    ['ab01c2', '01:2'],
+  ])('masks %s as %s', (input, expected) => {
+    expect(maskRunTime(input)).toBe(expected)
+  })
+})
+
+describe('totalHundredths', () => {
+  it('converts a run time to hundredths', () => {
+    expect(totalHundredths({ hours: 1, minutes: 2, seconds: 3, hundredths: 4 })).toBe(372304)
   })
 })

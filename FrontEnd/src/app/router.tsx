@@ -3,7 +3,9 @@ import { createBrowserRouter, type RouteObject } from 'react-router-dom'
 import { Spinner } from '../components/ui'
 import { NotFoundPage } from '../features/errors/NotFoundPage'
 import { LoginPage } from '../features/auth/LoginPage'
+import { RequireAuth } from '../features/auth/RequireAuth'
 import { SignupPage } from '../features/auth/SignupPage'
+import { SubmitRunPage } from '../features/submit/SubmitRunPage'
 import { CategorySelectPage } from '../features/categories/CategorySelectPage'
 import { LandingPage } from '../features/landing/LandingPage'
 import { LeaderboardPage } from '../features/leaderboard/LeaderboardPage'
@@ -33,6 +35,14 @@ export const router = createBrowserRouter([
       { path: '/leaderboard/:category?', element: <LeaderboardPage /> },
       { path: '/login', element: <LoginPage /> },
       { path: '/signup', element: <SignupPage /> },
+      {
+        path: '/submit/:category?',
+        element: (
+          <RequireAuth roles={['USER', 'MODERATOR']}>
+            <SubmitRunPage />
+          </RequireAuth>
+        ),
+      },
       ...devRoutes,
       { path: '*', element: <NotFoundPage /> },
     ],

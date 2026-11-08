@@ -27,15 +27,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return next.user
   }, [])
 
-  useEffect(() => {
+  useState(() =>
     configureHttp({
       getToken: () => loadSession()?.token ?? null,
       onUnauthorized: () => {
         signOut()
         toast.error('Your session has expired. Please log in again.')
       },
-    })
-  }, [signOut])
+    }),
+  )
 
   useEffect(() => {
     if (!session) {
