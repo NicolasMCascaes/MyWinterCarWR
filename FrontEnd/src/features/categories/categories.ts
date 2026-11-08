@@ -7,6 +7,7 @@ export type Category = 'RALLY' | 'DEATH' | 'ICE_RACE' | 'FULL_ASSEMBLY'
 
 export interface CategoryInfo {
   id: Category
+  slug: string
   label: string
   description: string
   image: string
@@ -16,6 +17,7 @@ export interface CategoryInfo {
 export const CATEGORIES: CategoryInfo[] = [
   {
     id: 'RALLY',
+    slug: 'rally',
     label: 'Rally',
     description: 'Show your strength by beating the times of other competitors in the world.',
     image: rallyImage,
@@ -23,6 +25,7 @@ export const CATEGORIES: CategoryInfo[] = [
   },
   {
     id: 'ICE_RACE',
+    slug: 'ice-race',
     label: 'Ice Race',
     description: 'Keep it on the track and beat the times of other competitors on the ice.',
     image: iceRaceImage,
@@ -30,6 +33,7 @@ export const CATEGORIES: CategoryInfo[] = [
   },
   {
     id: 'FULL_ASSEMBLY',
+    slug: 'full-assembly',
     label: 'Full Assembly',
     description: 'Assemble every Rivett part as fast as you can, starting from zero to hero!',
     image: fullAssemblyImage,
@@ -37,6 +41,7 @@ export const CATEGORIES: CategoryInfo[] = [
   },
   {
     id: 'DEATH',
+    slug: 'death',
     label: 'Death',
     description: 'Make the front page of the newspaper as fast as you can.',
     image: deathImage,
@@ -56,4 +61,19 @@ export function categoryInfo(id: Category): CategoryInfo {
 
 export function isCategory(value: string | null | undefined): value is Category {
   return value !== null && value !== undefined && BY_ID.has(value as Category)
+}
+
+const BY_SLUG = new Map(CATEGORIES.map((category) => [category.slug, category]))
+
+export const DEFAULT_CATEGORY: CategoryInfo = CATEGORIES[0]
+
+export function categoryFromSlug(slug: string | undefined): CategoryInfo | null {
+  if (slug === undefined) {
+    return DEFAULT_CATEGORY
+  }
+  return BY_SLUG.get(slug) ?? null
+}
+
+export function leaderboardPath(category: CategoryInfo): string {
+  return `/leaderboard/${category.slug}`
 }

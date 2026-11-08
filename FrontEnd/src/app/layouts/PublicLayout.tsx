@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom'
 import { Header, type NavItem } from '../../components/layout/Header'
 
 const PUBLIC_NAV: NavItem[] = [
+  { to: '/leaderboard', label: 'Leaderboard' },
   { to: '/categories', label: 'Compete now!' },
   { to: '/login', label: 'Login' },
 ]

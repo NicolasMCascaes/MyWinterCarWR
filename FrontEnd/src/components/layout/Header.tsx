@@ -19,7 +19,7 @@ export function Header({ nav = [], center, right }: HeaderProps) {
     <header className="sticky top-0 z-40 bg-primary shadow-[0_4px_24px_-8px_rgba(0,0,0,0.6)]">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link to="/" className="group flex items-center gap-3">
-          <span className="font-display text-2xl font-bold text-bg transition-colors group-hover:text-white">
+          <span className="hidden font-display text-2xl font-bold text-bg transition-colors group-hover:text-white sm:inline">
             My Winter Car WR
           </span>
           <img
@@ -29,14 +29,14 @@ export function Header({ nav = [], center, right }: HeaderProps) {
           />
         </Link>
         {center}
-        <nav className="flex items-center gap-2 sm:gap-6">
+        <nav className="flex items-center gap-4 sm:gap-6">
           {nav.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
                 cn(
-                  'relative font-display text-xl font-semibold text-white/90 transition-colors hover:text-white',
+                  'relative font-display text-base font-semibold whitespace-nowrap text-white/90 transition-colors hover:text-white sm:text-xl',
                   'after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:bg-white after:transition-transform hover:after:scale-x-100',
                   isActive && 'text-white after:scale-x-100',
                 )

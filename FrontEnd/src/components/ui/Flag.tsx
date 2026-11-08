@@ -8,11 +8,7 @@ interface FlagProps {
 
 export function Flag({ code, className }: FlagProps) {
   if (!code) {
-    return (
-      <span aria-label="Unknown country" className={cn('text-muted', className)}>
-        -
-      </span>
-    )
+    return null
   }
   const name = countryName(code)
   return (
