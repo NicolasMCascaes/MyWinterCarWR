@@ -26,7 +26,12 @@ const moderationRoutes: RouteObject = {
     </RequireAuth>
   ),
   children: [
-    { index: true, element: <Navigate to="/moderation/queue" replace /> },
+    { index: true, element: <Navigate to="/moderation/dashboard" replace /> },
+    {
+      path: 'dashboard',
+      lazy: () =>
+        import('../features/dashboard/DashboardPage').then((module) => ({ Component: module.DashboardPage })),
+    },
     {
       path: 'queue',
       lazy: () =>

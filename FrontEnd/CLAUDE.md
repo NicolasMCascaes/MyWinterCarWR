@@ -22,6 +22,7 @@ Before finishing a change: `npm run lint && npm run test && npm run build`.
 - `src/app` - router, providers, layouts
 - `src/components/ui` - generic presentational components (Button, Card, Chip, Input, Avatar, Flag, feedback states). Never call the API here.
 - `src/components/layout` - Header, PageContainer, Sidebar
+- `src/features/dashboard` - moderator dashboard built on `/attempt/moderator/stats?days=7|30|90`
 - `src/features/<feature>` - pages and components of one domain area, plus `api.ts` (requests + query/mutation hooks) and `types.ts` (mirrors backend DTOs)
 - `src/lib` - framework-free helpers: `http.ts`, `jwt.ts`, `time.ts`, `video.ts`, `countries.ts`, `cn.ts`
 - `src/assets` - images exported from the Figma file
@@ -32,6 +33,8 @@ Pages compose feature components; feature components compose `ui` components. Da
 - Use only theme tokens (`bg-surface`, `text-muted`, `bg-accent`, `--color-cat-*`...). No loose hex values in components.
 - Icons only from lucide-react; flags only through the `Flag` component.
 - Category labels, colors and images come from `features/categories/categories.ts`.
+- Category colors (`--color-cat-*`) are a categorical chart palette validated for the dark surface (lightness band, CVD and normal-vision separation). Re-run the dataviz palette validator before changing them.
+- Charts use Recharts (only in `features/dashboard`, lazy loaded). Every chart has a tooltip, a visible legend or labels, and a data view.
 - Keep the Figma layout; interaction improvements (hover, transitions, skeletons, empty states) are welcome.
 - UI text is in English.
 - Accessible by default: labels on inputs, `aria-*` on icon-only buttons, visible focus.

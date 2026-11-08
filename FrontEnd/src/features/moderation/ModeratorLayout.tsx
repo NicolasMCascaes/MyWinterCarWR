@@ -14,7 +14,7 @@ interface SidebarItem {
 }
 
 const ITEMS: SidebarItem[] = [
-  { to: '/moderation/dashboard', label: 'Dashboard', icon: LayoutDashboard, soon: true },
+  { to: '/moderation/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/moderation/queue', label: 'Verification Queue', icon: ClockAlert },
   { to: '/moderation/history', label: 'Review History', icon: History },
 ]

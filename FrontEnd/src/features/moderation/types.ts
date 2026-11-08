@@ -22,3 +22,25 @@ export interface AttemptDetails {
   reviewedBy: string | null
   reviewedAt: string | null
 }
+
+export type StatsPeriod = 7 | 30 | 90
+
+export interface DailySubmissions {
+  date: string
+  submissions: number
+}
+
+export interface CategoryTotals {
+  category: string
+  total: number
+  pending: number
+  approved: number
+  rejected: number
+}
+
+export interface ModerationStats {
+  days: number
+  pendingCount: number
+  submissionsPerDay: DailySubmissions[]
+  totalsPerCategory: CategoryTotals[]
+}

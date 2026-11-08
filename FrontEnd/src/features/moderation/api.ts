@@ -1,13 +1,14 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ApiError, http } from '../../lib/http'
 import { leaderboardKeys } from '../leaderboard/api'
-import type { AttemptDetails, ReviewDecision, ReviewedStatus } from './types'
+import type { AttemptDetails, ModerationStats, ReviewDecision, ReviewedStatus, StatsPeriod } from './types'
 
 export const moderationKeys = {
   all: ['moderation'] as const,
   pending: () => ['moderation', 'pending'] as const,
   attempt: (id: number) => ['moderation', 'attempt', id] as const,
   history: (status: ReviewedStatus | null) => ['moderation', 'history', status ?? 'ALL'] as const,
+  stats: (days: StatsPeriod) => ['moderation', 'stats', days] as const,
 }
 
 export function fetchPendingAttempts(): Promise<AttemptDetails[]> {
@@ -24,6 +25,18 @@ export function fetchReviewHistory(status: ReviewedStatus | null): Promise<Attem
 
 export function reviewAttempt(id: number, decision: ReviewDecision): Promise<void> {
   return http.patch<void>(`/attempt/moderator/${decision === 'approve' ? 'accept' : 'reject'}/${id}`)
+}
+
+export function fetchModerationStats(days: StatsPeriod): Promise<ModerationStats> {
+  return http.get<ModerationStats>(`/attempt/moderator/stats?days=${days}`)
+}
+
+export function useModerationStats(days: StatsPeriod) {
+  return useQuery({
+    queryKey: moderationKeys.stats(days),
+    queryFn: () => fetchModerationStats(days),
+    placeholderData: keepPreviousData,
+  })
 }
 
 export function usePendingAttempts() {
