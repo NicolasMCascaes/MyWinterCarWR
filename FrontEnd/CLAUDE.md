@@ -42,7 +42,8 @@ Pages compose feature components; feature components compose `ui` components. Da
 - Roles: `USER`, `MODERATOR`, `ADMIN`. The backend checks exact roles (no hierarchy).
 - Login returns `{ token, username }`; the JWT carries `id`, `email`, `username`, `role`. Register returns no body, so the UI logs in right after registering.
 - Session: token in `localStorage` (`mwc.token`), managed by `features/auth/AuthProvider`; read it with `useAuth()`. Protect routes with `<RequireAuth roles={[...]}>`.
-- Unknown email on login returns 404 and wrong password 401; the UI shows the same message for both.
+- Login failures (unknown email or wrong password) return 401 with a generic message.
+- Registration rules (validated in both front and backend): valid email, password 8-128 chars, username 3-20 chars with letters, numbers, `-` and `_`, ISO-2 country.
 - Attempt time is sent as `HH:mm:ss` or `HH:mm:ss.SS` (`lib/time.ts`).
 - Video links: YouTube or Twitch only (`lib/video.ts` mirrors the backend rule).
 - Errors come as `{ errorMessage, errorCode }` and are turned into `ApiError`.

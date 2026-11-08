@@ -1,7 +1,6 @@
 package com.mwc.wr.user.application.service;
 
 import com.mwc.wr.shared.config.jwt.JwtUtil;
-import com.mwc.wr.shared.exception.ResourceNotFoundException;
 import com.mwc.wr.user.application.dto.UserLoginRequestDto;
 import com.mwc.wr.user.application.dto.UserLoginResponseDto;
 import com.mwc.wr.user.domain.model.Roles;
@@ -119,9 +118,10 @@ class AuthenticateUserServiceTest {
         when(passwordEncoder.matches(senha, senhaCriptografada)).thenReturn(true);
         when(jwtUtil.generateToken(any(UserDetails.class))).thenReturn(fakeToken);
 
-        assertThrows(ResourceNotFoundException.class, () -> authenticateUserService.execute(dto));
+        assertThrows(BadCredentialsException.class, () -> authenticateUserService.execute(dto));
 
         verify(userRepository, times(1)).findByEmail(email);
+        verify(passwordEncoder, times(1)).matches(Mockito.eq(senha), Mockito.any());
         verify(passwordEncoder, Mockito.never()).matches(senha, senhaCriptografada);
         verify(jwtUtil, Mockito.never()).generateToken(any(UserDetails.class));
     }

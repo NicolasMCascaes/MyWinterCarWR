@@ -1,5 +1,7 @@
 package com.mwc.wr.user.application.service;
 
+import java.util.Optional;
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -8,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.mwc.wr.shared.config.jwt.CustomUserDetails;
 import com.mwc.wr.shared.config.jwt.JwtUtil;
-import com.mwc.wr.shared.exception.ResourceNotFoundException;
 import com.mwc.wr.user.application.dto.UserLoginRequestDto;
 import com.mwc.wr.user.application.dto.UserLoginResponseDto;
 import com.mwc.wr.user.domain.model.User;
@@ -20,22 +21,25 @@ public class AuthenticateUserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncryptor passwordEncoder;
+    private final String timingGuardHash;
 
     public AuthenticateUserService(UserRepository userRepository, JwtUtil jwtUtil,
             PasswordEncryptor passwordEncoder) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
+        this.timingGuardHash = passwordEncoder.encode("timing-guard-password");
     }
 
     public UserLoginResponseDto execute(UserLoginRequestDto dto) {
-        User user = userRepository.findByEmail(dto.email())
-                .orElseThrow(() -> new ResourceNotFoundException("USER_NOT_FOUND"));
-        if (!passwordEncoder.matches(dto.password(), user.getPassword())) {
+        Optional<User> found = userRepository.findByEmail(dto.email());
+        String storedHash = found.map(User::getPassword).orElse(timingGuardHash);
+        boolean passwordMatches = passwordEncoder.matches(dto.password(), storedHash);
+        if (found.isEmpty() || !passwordMatches) {
             throw new BadCredentialsException("WRONG_CREDENTIALS");
         }
         UserDetails userDetails = loadUserByUsername(dto.email());
-        return new UserLoginResponseDto(jwtUtil.generateToken(userDetails), user.getUsername());
+        return new UserLoginResponseDto(jwtUtil.generateToken(userDetails), found.get().getUsername());
     }
 
     @Override
