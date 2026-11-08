@@ -1,4 +1,4 @@
-package com.mwc.wr.record.infraestruture.controller;
+package com.mwc.wr.record.infrastructure.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

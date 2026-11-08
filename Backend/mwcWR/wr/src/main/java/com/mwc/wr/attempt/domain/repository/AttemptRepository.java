@@ -14,23 +14,21 @@ public interface AttemptRepository {
 
     Optional<Attempt> findById(Long id);
 
+    Optional<Attempt> findByIdForUpdate(Long id);
+
     List<Attempt> findAllByAttemptCategory(Category category);
 
     List<Attempt> findAllByUserId(UUID userId);
 
     void deleteById(Long id);
 
-    void acceptAttemptById(Long id);
-
-    void rejectAttemptById(Long id);
-
     List<Attempt> findAll();
 
     List<Attempt> findAllByAttemptStatus(AttemptStatus status);
 
-    List<AttemptDetails> findAllByIsRecordFalseAndAttemptCategoryAndAttemptStatus(Category category,
-            AttemptStatus status);
+    List<Attempt> findAllByCategoryAndStatusOrderByTime(Category category, AttemptStatus status);
+
+    List<AttemptDetails> findApprovedNonRecordDetails(Category category);
 
     boolean existsByUserIdAndAttemptStatus(UUID userId, AttemptStatus status);
-
 }

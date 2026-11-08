@@ -21,6 +21,9 @@ public class User {
         if (password == null || password.isBlank()) {
             throw new IllegalArgumentException("Password cannot be null");
         }
+        if (role == null) {
+            throw new IllegalArgumentException("Role cannot be null");
+        }
         this.id = id;
         this.role = role;
         this.email = email;

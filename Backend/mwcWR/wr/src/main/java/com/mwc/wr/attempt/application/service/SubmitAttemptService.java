@@ -1,5 +1,7 @@
 package com.mwc.wr.attempt.application.service;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 import com.mwc.wr.attempt.application.dto.AttemptRequestDto;
@@ -20,17 +22,16 @@ public class SubmitAttemptService {
         this.userRepository = userRepository;
     }
 
-    public void submitAttempt(AttemptRequestDto dto) {
-        userRepository.findById(dto.userId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found "));
-        boolean hasPendingAttempt = attemptRepository.existsByUserIdAndAttemptStatus(dto.userId(),
-                AttemptStatus.PENDING);
-        if (hasPendingAttempt) {
+    public void submitAttempt(UUID userId, AttemptRequestDto dto) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("USER_NOT_FOUND"));
+
+        if (attemptRepository.existsByUserIdAndAttemptStatus(userId, AttemptStatus.PENDING)) {
             throw new AttemptAlreadyPendingException("User already has a pending attempt");
         }
-        Attempt attempt = new Attempt(null, dto.userId(), dto.videoLink(), dto.attemptTime(), dto.attemptDescription(),
-                dto.attemptCategory(), dto.attemptStatus(), false);
+
+        Attempt attempt = new Attempt(null, userId, dto.videoLink(), dto.attemptTime(), dto.attemptDescription(),
+                dto.attemptCategory(), AttemptStatus.PENDING, false);
         attemptRepository.save(attempt);
     }
-
 }

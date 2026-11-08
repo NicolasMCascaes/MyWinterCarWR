@@ -1,4 +1,4 @@
-package com.mwc.wr.record.infraestruture.persistence.repository;
+package com.mwc.wr.record.infrastructure.persistence.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,10 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import com.mwc.wr.attempt.domain.model.Category;
 import com.mwc.wr.record.application.dto.RecordDetails;
-import com.mwc.wr.record.domain.model.Position;
 import com.mwc.wr.record.domain.model.Record;
 import com.mwc.wr.record.domain.repository.RecordRepository;
-import com.mwc.wr.record.infraestruture.mapper.RecordMapper;
+import com.mwc.wr.record.infrastructure.mapper.RecordMapper;
 
 @Repository
 public class RecordRepositoryImpl implements RecordRepository {
@@ -51,22 +50,19 @@ public class RecordRepositoryImpl implements RecordRepository {
 
     @Override
     public List<Record> findAll() {
-        return springDataRecordRepository.findAll().stream()
+        return springDataRecordRepository.findAll().stream().map(recordMapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Record> findActiveByCategory(Category category) {
+        return springDataRecordRepository.findAllByAttempt_AttemptCategoryAndIsActiveTrue(category).stream()
                 .map(recordMapper::toDomain)
                 .toList();
     }
 
     @Override
-    public List<RecordDetails> findAllByAttempt_AttemptCategoryAndIsActiveTrueOrderByAttempt_AttemptTimeDesc(
-            Category category) {
-        return springDataRecordRepository
-                .findAllByAttempt_AttemptCategoryAndIsActiveTrueOrderByAttempt_AttemptTimeDesc(category);
-    }
-
-    @Override
-    public Optional<Record> findByPositionAndAttempt_Category(Position position, Category category) {
-        return springDataRecordRepository.findByPositionAndAttempt_AttemptCategoryAndIsActiveTrue(position, category)
-                .map(recordMapper::toDomain);
+    public List<RecordDetails> findActiveDetailsByCategory(Category category) {
+        return springDataRecordRepository.findActiveDetailsByCategory(category);
     }
 
     @Override
@@ -75,9 +71,7 @@ public class RecordRepositoryImpl implements RecordRepository {
     }
 
     @Override
-    public Optional<Record> findByUserIdAndAttempt_Category(UUID userId, Category category) {
-        return springDataRecordRepository.findByUserIdAndAttempt_AttemptCategory(userId, category)
-                .map(recordMapper::toDomain);
+    public void lockCategory(Category category) {
+        springDataRecordRepository.lockCategory(category.name());
     }
-
 }

@@ -1,4 +1,4 @@
-package com.mwc.wr.attempt.infraestruture.persistence.entity;
+package com.mwc.wr.attempt.infrastructure.persistence.entity;
 
 import java.time.LocalTime;
 

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.mwc.wr.shared.exception.UserAlreadyExistsException;
 import com.mwc.wr.user.application.dto.UserRequestDto;
+import com.mwc.wr.user.domain.model.Roles;
 import com.mwc.wr.user.domain.model.User;
 import com.mwc.wr.user.domain.repository.UserRepository;
 import com.mwc.wr.user.domain.service.PasswordEncryptor;
@@ -24,7 +25,7 @@ public class RegisterUserService {
         if (userRepository.existsByEmail(dto.email()) || userRepository.existsByUsername(dto.username())) {
             throw new UserAlreadyExistsException("USER_ALREADY_EXISTS");
         }
-        User user = new User(null, dto.email(), dto.username(), passwordEncoder.encode(dto.password()), dto.roles(),
+        User user = new User(null, dto.email(), dto.username(), passwordEncoder.encode(dto.password()), Roles.USER,
                 LocalDateTime.now());
         userRepository.save(user);
     }

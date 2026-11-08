@@ -1,8 +1,8 @@
-package com.mwc.wr.record.infraestruture.persistence.entity;
+package com.mwc.wr.record.infrastructure.persistence.entity;
 
 import java.time.LocalDateTime;
 
-import com.mwc.wr.attempt.infraestruture.persistence.entity.AttemptEntity;
+import com.mwc.wr.attempt.infrastructure.persistence.entity.AttemptEntity;
 import com.mwc.wr.record.domain.model.Position;
 import com.mwc.wr.user.infrastructure.persistence.entity.UserEntity;
 
@@ -15,7 +15,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,7 +27,7 @@ public class RecordEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "attempt_id", nullable = false)
     private AttemptEntity attempt;
     @Column(nullable = false)

@@ -6,10 +6,14 @@ import java.util.stream.Collectors;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -58,6 +62,26 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(InvalidAttemptStatusException.class)
+    public ResponseEntity<ErrorInfo> handleInvalidAttemptStatusException(InvalidAttemptStatusException ex) {
+        return build(resolveMessage(ex.getMessage()), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorInfo> handleBadCredentialsException(BadCredentialsException ex) {
+        return build(resolveMessage(ex.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorInfo> handleAccessDeniedException(AccessDeniedException ex) {
+        return build("Access denied", HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler({ HttpMessageNotReadableException.class, MethodArgumentTypeMismatchException.class })
+    public ResponseEntity<ErrorInfo> handleMalformedRequest(Exception ex) {
+        return build("Malformed request: invalid JSON or parameter value", HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler({ MethodArgumentNotValidException.class, ConstraintViolationException.class })
     public ResponseEntity<ErrorInfo> handleValidationExceptions(Exception e) {
         String errorMsg;
@@ -71,6 +95,10 @@ public class GlobalExceptionHandler {
         }
         ErrorInfo error = new ErrorInfo(errorMsg, HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    private ResponseEntity<ErrorInfo> build(String message, HttpStatus status) {
+        return new ResponseEntity<>(new ErrorInfo(message, status.value(), LocalDateTime.now()), status);
     }
 
     private String resolveMessage(String messageKey) {

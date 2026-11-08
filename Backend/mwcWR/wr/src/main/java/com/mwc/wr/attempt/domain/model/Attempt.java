@@ -3,29 +3,59 @@ package com.mwc.wr.attempt.domain.model;
 import java.time.LocalTime;
 import java.util.UUID;
 
+import com.mwc.wr.shared.exception.InvalidAttemptStatusException;
+
 public class Attempt {
     private Long idAttempt;
     private UUID userId;
     private String videoLink;
     private LocalTime attemptTime;
-    private String attempt_description;
+    private String attemptDescription;
     private Category attemptCategory;
     private AttemptStatus attemptStatus;
-    private Boolean is_record;
+    private Boolean isRecord;
 
-    public Attempt(Long idAttempt, UUID userId, String videoLink, LocalTime attemptTime, String attempt_description,
-            Category attemptCategory, AttemptStatus attemptStatus, Boolean is_record) {
+    public Attempt(Long idAttempt, UUID userId, String videoLink, LocalTime attemptTime, String attemptDescription,
+            Category attemptCategory, AttemptStatus attemptStatus, Boolean isRecord) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
+        }
+        if (videoLink == null || videoLink.isBlank()) {
+            throw new IllegalArgumentException("Video link cannot be blank");
+        }
+        if (attemptTime == null) {
+            throw new IllegalArgumentException("Attempt time cannot be null");
+        }
+        if (attemptCategory == null) {
+            throw new IllegalArgumentException("Attempt category cannot be null");
+        }
         this.idAttempt = idAttempt;
         this.userId = userId;
         this.videoLink = videoLink;
         this.attemptTime = attemptTime;
-        this.attempt_description = attempt_description;
+        this.attemptDescription = attemptDescription;
         this.attemptCategory = attemptCategory;
         this.attemptStatus = attemptStatus;
-        this.is_record = is_record;
+        this.isRecord = isRecord;
     }
 
     public Attempt() {
+    }
+
+    public void approve() {
+        ensurePending();
+        this.attemptStatus = AttemptStatus.APPROVED;
+    }
+
+    public void reject() {
+        ensurePending();
+        this.attemptStatus = AttemptStatus.REJECTED;
+    }
+
+    private void ensurePending() {
+        if (attemptStatus != AttemptStatus.PENDING) {
+            throw new InvalidAttemptStatusException("ATTEMPT_NOT_PENDING");
+        }
     }
 
     public Long getIdAttempt() {
@@ -60,6 +90,14 @@ public class Attempt {
         this.attemptTime = attemptTime;
     }
 
+    public String getAttemptDescription() {
+        return attemptDescription;
+    }
+
+    public void setAttemptDescription(String attemptDescription) {
+        this.attemptDescription = attemptDescription;
+    }
+
     public Category getAttemptCategory() {
         return attemptCategory;
     }
@@ -76,20 +114,11 @@ public class Attempt {
         this.attemptStatus = attemptStatus;
     }
 
-    public Boolean getIs_record() {
-        return is_record;
+    public Boolean getIsRecord() {
+        return isRecord;
     }
 
-    public void setIs_record(Boolean is_record) {
-        this.is_record = is_record;
+    public void setIsRecord(Boolean isRecord) {
+        this.isRecord = isRecord;
     }
-
-    public String getAttempt_description() {
-        return attempt_description;
-    }
-
-    public void setAttempt_description(String attempt_description) {
-        this.attempt_description = attempt_description;
-    }
-
 }

@@ -1,10 +1,10 @@
-package com.mwc.wr.record.infraestruture.mapper;
+package com.mwc.wr.record.infrastructure.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.mwc.wr.attempt.infraestruture.persistence.entity.AttemptEntity;
+import com.mwc.wr.attempt.infrastructure.persistence.entity.AttemptEntity;
 import com.mwc.wr.record.domain.model.Record;
-import com.mwc.wr.record.infraestruture.persistence.entity.RecordEntity;
+import com.mwc.wr.record.infrastructure.persistence.entity.RecordEntity;
 import com.mwc.wr.user.infrastructure.persistence.entity.UserEntity;
 
 @Component

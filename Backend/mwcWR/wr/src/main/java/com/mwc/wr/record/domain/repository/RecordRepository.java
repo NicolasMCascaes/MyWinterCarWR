@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import com.mwc.wr.attempt.domain.model.Category;
 import com.mwc.wr.record.application.dto.RecordDetails;
-import com.mwc.wr.record.domain.model.Position;
 import com.mwc.wr.record.domain.model.Record;
 
 public interface RecordRepository {
@@ -22,13 +21,11 @@ public interface RecordRepository {
 
     List<Record> findAll();
 
-    List<RecordDetails> findAllByAttempt_AttemptCategoryAndIsActiveTrueOrderByAttempt_AttemptTimeDesc(
-            Category category);
+    List<Record> findActiveByCategory(Category category);
 
-    Optional<Record> findByPositionAndAttempt_Category(Position position, Category category);
+    List<RecordDetails> findActiveDetailsByCategory(Category category);
 
     List<RecordDetails> findAllDetails();
 
-    Optional<Record> findByUserIdAndAttempt_Category(UUID userId, Category category);
-
+    void lockCategory(Category category);
 }

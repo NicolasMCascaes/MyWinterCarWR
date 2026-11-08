@@ -1,4 +1,4 @@
-package com.mwc.wr.attempt.infraestruture.persistence.repository;
+package com.mwc.wr.attempt.infrastructure.persistence.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +11,8 @@ import com.mwc.wr.attempt.domain.model.Attempt;
 import com.mwc.wr.attempt.domain.model.AttemptStatus;
 import com.mwc.wr.attempt.domain.model.Category;
 import com.mwc.wr.attempt.domain.repository.AttemptRepository;
-import com.mwc.wr.attempt.infraestruture.mapper.AttemptMapper;
+import com.mwc.wr.attempt.infrastructure.mapper.AttemptMapper;
+import com.mwc.wr.attempt.infrastructure.persistence.entity.AttemptEntity;
 
 @Repository
 public class AttemptRepositoryImpl implements AttemptRepository {
@@ -34,13 +35,18 @@ public class AttemptRepositoryImpl implements AttemptRepository {
     }
 
     @Override
+    public Optional<Attempt> findByIdForUpdate(Long id) {
+        return repository.findByIdForUpdate(id).map(attemptMapper::toDomain);
+    }
+
+    @Override
     public List<Attempt> findAllByAttemptCategory(Category category) {
-        return repository.findAllByAttemptCategory(category).stream().map(attemptMapper::toDomain).toList();
+        return toDomain(repository.findAllByAttemptCategory(category));
     }
 
     @Override
     public List<Attempt> findAllByUserId(UUID userId) {
-        return repository.findAllByUserId_Id(userId).stream().map(attemptMapper::toDomain).toList();
+        return toDomain(repository.findAllByUser_Id(userId));
     }
 
     @Override
@@ -49,33 +55,32 @@ public class AttemptRepositoryImpl implements AttemptRepository {
     }
 
     @Override
-    public void acceptAttemptById(Long id) {
-        repository.acceptAttemptById(id);
-    }
-
-    @Override
-    public void rejectAttemptById(Long id) {
-        repository.rejectAttemptById(id);
-    }
-
-    @Override
     public List<Attempt> findAll() {
-        return repository.findAll().stream().map(attemptMapper::toDomain).toList();
+        return toDomain(repository.findAll());
     }
 
     @Override
     public List<Attempt> findAllByAttemptStatus(AttemptStatus status) {
-        return repository.findAllByAttemptStatus(status).stream().map(attemptMapper::toDomain).toList();
+        return toDomain(repository.findAllByAttemptStatus(status));
     }
 
     @Override
-    public List<AttemptDetails> findAllByIsRecordFalseAndAttemptCategoryAndAttemptStatus(Category category,
-            AttemptStatus status) {
-        return repository.findAllByIsRecordFalseAndAttemptCategoryAndAttemptStatus(category, status);
+    public List<Attempt> findAllByCategoryAndStatusOrderByTime(Category category, AttemptStatus status) {
+        return toDomain(
+                repository.findAllByAttemptCategoryAndAttemptStatusOrderByAttemptTimeAscIdAttemptAsc(category, status));
+    }
+
+    @Override
+    public List<AttemptDetails> findApprovedNonRecordDetails(Category category) {
+        return repository.findApprovedNonRecordDetails(category, AttemptStatus.APPROVED);
     }
 
     @Override
     public boolean existsByUserIdAndAttemptStatus(UUID userId, AttemptStatus status) {
         return repository.existsByUser_IdAndAttemptStatus(userId, status);
+    }
+
+    private List<Attempt> toDomain(List<AttemptEntity> entities) {
+        return entities.stream().map(attemptMapper::toDomain).toList();
     }
 }

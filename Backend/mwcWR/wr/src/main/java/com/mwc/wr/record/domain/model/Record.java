@@ -13,6 +13,15 @@ public class Record {
 
     public Record(Long idRecord, UUID userId, Long attemptId, Position position, boolean isActive,
             LocalDateTime createdAt) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
+        }
+        if (attemptId == null) {
+            throw new IllegalArgumentException("Attempt ID cannot be null");
+        }
+        if (position == null) {
+            throw new IllegalArgumentException("Position cannot be null");
+        }
         this.idRecord = idRecord;
         this.userId = userId;
         this.attemptId = attemptId;
