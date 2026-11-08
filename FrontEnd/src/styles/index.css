@@ -1,0 +1,77 @@
+@import 'tailwindcss';
+@import 'flag-icons/css/flag-icons.min.css';
+
+@theme {
+  --font-display: 'Freeman', 'Arial Narrow', sans-serif;
+  --font-sans: 'Freeman', 'Arial Narrow', sans-serif;
+
+  --color-bg: #06071a;
+  --color-bg-deep: #010105;
+  --color-surface: #0c0b20;
+  --color-surface-2: #151523;
+  --color-surface-3: #212233;
+  --color-sidebar: #0c0b20;
+  --color-border: #2a2a3d;
+
+  --color-primary: #0084ff;
+  --color-primary-hover: #1a90ff;
+  --color-accent: #4d71ff;
+  --color-accent-hover: #6383ff;
+  --color-brand-text: #3b7be8;
+  --color-podium: #0b2a6b;
+
+  --color-gold: #f5b700;
+  --color-silver: #a8b0bd;
+  --color-bronze: #c8601e;
+
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+
+  --color-chip: #d9d9d9;
+  --color-text: #ffffff;
+  --color-muted: #9ca3af;
+
+  --color-cat-rally: #f7948a;
+  --color-cat-ice-race: #f5d547;
+  --color-cat-full-assembly: #8b7cf6;
+  --color-cat-death: #f59e0b;
+
+  --animate-rise: rise 0.5s ease-out both;
+  --animate-fade-in: fade-in 0.4s ease-out both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    font-synthesis-weight: none;
+  }
+
+  body {
+    @apply bg-bg font-sans text-text antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+}
